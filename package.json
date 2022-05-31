@@ -1,0 +1,16 @@
+{
+  "name": "post-validation",
+  "version": "1.0.0",
+  "description": "a repository of validation rules for use across multiple Reputation.com services",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nuvi/post-validation.git"
+  },
+  "author": "Reputation.com",
+  "license": "UNLICENSED",
+  "private": true
+}

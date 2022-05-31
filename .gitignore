@@ -1,0 +1,24 @@
+/node_modules
+/.env
+/.vscode
+temp/*
+*.yaml.dec
+
+node_modules
+
+# IntelliJ
+.idea
+*.iml
+
+# Sever credentials
+# config.js
+
+# npm debug log
+npm-debug.log
+launch.json
+
+# Mac files
+.DS_Store
+
+# Environment variables
+.env
