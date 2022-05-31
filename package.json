@@ -4,7 +4,10 @@
   "description": "a repository of validation rules for use across multiple Reputation.com services",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "npx eslint ./",
+    "lint:dev": "npx eslint --fix ./",
+    "test": "npm run lint && npm run unimported",
+    "unimported": "npx unimported"
   },
   "repository": {
     "type": "git",
@@ -12,5 +15,14 @@
   },
   "author": "Reputation.com",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-lodash": "^7.2.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "unimported": "^1.7.0"
+  }
 }
