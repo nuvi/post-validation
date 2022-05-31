@@ -16,7 +16,9 @@
   "author": "Reputation.com",
   "license": "UNLICENSED",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "ajv": "^8.11.0"
+  },
   "devDependencies": {
     "eslint": "^5.10.0",
     "eslint-config-airbnb-base": "^13.1.0",
