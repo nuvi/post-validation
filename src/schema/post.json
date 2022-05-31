@@ -1,0 +1,38 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "externalPostId": { "type": "string" },
+        "title": { "type": ["string", "null"] },
+        "body": { "type": ["string", "null"] },
+        "publishAt": {
+            "type": ["string", "null"],
+            "format": "date-time"
+        },
+        "integrationId": { "type": "string" },
+        "link_url": {
+            "type": ["string", "null"]
+        },
+        "link_caption": {
+            "type": ["string", "null"]
+        },
+        "link_image_url": {
+            "type": ["string", "null"]
+        },
+        "link_title": {
+            "type": ["string", "null"]
+        },
+        "media": {
+            "type": ["array", "null"],
+            "items": {
+                "type": "object",
+                "properties": {
+                    "media_url": { "type": "string" },
+                    "alt_text": { "type": ["string", "null"] },
+                    "metadata": {"type": "object" }
+                }
+            }
+        }
+    },
+    "required": ["externalPostId"]
+}
