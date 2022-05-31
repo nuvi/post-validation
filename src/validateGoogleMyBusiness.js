@@ -1,7 +1,23 @@
 const get = require('lodash/get');
 
 const ValidationObj = require('./ValidationObj');
-const { CALLS_TO_ACTION_REQUIRING_URL, SUPPORTED_CALLS_TO_ACTION } = require('../../utils/googleMyBusinessConstants');
+
+const GMB_CALLS_TO_ACTION = [
+  'BOOK',
+  'ORDER',
+  'SHOP',
+  'LEARN_MORE',
+  'SIGN_UP',
+  'CALL',
+];
+
+const GMB_CALLS_TO_ACTION_REQUIRING_URL = [
+  'BOOK',
+  'ORDER',
+  'SHOP',
+  'LEARN_MORE',
+  'SIGN_UP',
+];
 
 const SUPPORTED_IMAGE_EXTENSIONS = [
   '.jpeg',
@@ -45,10 +61,10 @@ function validateGMBDetails (details) {
     if (!cta.action) {
       result.add_error('GMB Call To Action posts require an action');
     }
-    if (cta.action && !SUPPORTED_CALLS_TO_ACTION.includes(cta.action)) {
+    if (cta.action && !GMB_CALLS_TO_ACTION.includes(cta.action)) {
       result.add_error(`GMB unsupported Call To Action: ${cta.action}`);
     }
-    if (CALLS_TO_ACTION_REQUIRING_URL.includes(cta.action) && !cta.url) {
+    if (GMB_CALLS_TO_ACTION_REQUIRING_URL.includes(cta.action) && !cta.url) {
       result.add_error('GMB Call To Action posts require a url');
     }
   } else if (details.google_my_business.offer) {
@@ -111,5 +127,7 @@ function validate_google_my_business (post, integration) {
 }
 
 module.exports = {
+  GMB_CALLS_TO_ACTION,
+  GMB_CALLS_TO_ACTION_REQUIRING_URL,
   validate_google_my_business,
 };

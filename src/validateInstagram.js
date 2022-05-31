@@ -10,7 +10,7 @@ const SUPPORTED_IMAGE_EXTENSIONS = [
   '.png',
 ];
 
-const SUPPORTED_VIDEO_EXTENSIONS = [
+const INSTAGRAM_VIDEO_EXTENSIONS = [
   '.mp4',
 ];
 
@@ -60,7 +60,7 @@ function validateInstagramMetadata (metadata) {
       validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
     }
     if (size > MAX_IMAGE_SIZE) validationObj.add_error('Image file size must not exceed 8 MB.');
-  } else if (SUPPORTED_VIDEO_EXTENSIONS.includes(extension)) {
+  } else if (INSTAGRAM_VIDEO_EXTENSIONS.includes(extension)) {
     const rotation = get(streamsObj, 'video.rotation');
     if (rotation && (`${rotation}` === '-90' || `${rotation}` === '90')) aspectRatio = height / width;
     if (!SUPPORTED_VIDEO_CODECS.includes(codec_name)) validationObj.add_error('Video codec must be either H.264 or HEVC.');
@@ -116,6 +116,5 @@ function validate_instagram (post, integration) {
 
 module.exports = {
   validate_instagram,
-  SUPPORTED_IMAGE_EXTENSIONS,
-  SUPPORTED_VIDEO_EXTENSIONS,
+  INSTAGRAM_VIDEO_EXTENSIONS,
 };
