@@ -67,7 +67,7 @@ async function validateTwitterMetadata (metadata, media_url) {
   } else if (SUPPORTED_GIF_EXTENSIONS.includes(extension)) {
     const imgResult = await fetch(media_url);
     const imgBuffer = await imgResult.buffer();
-    if (isAnimated(imgBuffer)) {
+    if (isAnimated(imgBuffer)) { // TODO: get rid of network calls; figure  out how to check this solely from the metadata already available
       // errors
       if (size > 15000000) validationObj.add_error('File size must not exceed 15 MB');
       if (width > 1280 || height > 1080) validationObj.add_error('Resolution must be <= 1280x1080 (width x height)');

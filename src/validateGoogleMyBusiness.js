@@ -1,4 +1,5 @@
 const get = require('lodash/get');
+
 const ValidationObj = require('./ValidationObj');
 const { CALLS_TO_ACTION_REQUIRING_URL, SUPPORTED_CALLS_TO_ACTION } = require('../../utils/googleMyBusinessConstants');
 

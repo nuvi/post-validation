@@ -15,7 +15,7 @@ function validateFacebookBody (body, hasMedia = false) {
   return validationObj;
 }
 
-const SUPPORTED_IMAGE_EXTENSIONS = [
+const FACEBOOK_IMAGE_EXTENSIONS = [
   '.jpeg',
   '.jpg',
   '.png',
@@ -25,7 +25,7 @@ const SUPPORTED_IMAGE_EXTENSIONS = [
   '.gif',
 ];
 
-const SUPPORTED_VIDEO_EXTENSIONS = [
+const FACEBOOK_VIDEO_EXTENSIONS = [
   '.3g2',
   '.3gp',
   '.3gpp',
@@ -66,14 +66,14 @@ function validateFacebookMetadata (metadata) {
   const { extension, size, duration } = metadata;
   const streamsObj = crossStreams(metadata);
 
-  if (SUPPORTED_IMAGE_EXTENSIONS.includes(extension)) {
+  if (FACEBOOK_IMAGE_EXTENSIONS.includes(extension)) {
     if (extension === '.gif') validationObj.add_warning('GIFs can be uploaded but will not animate on facebook.');
     if (size >= 4 * 1024 * 1024) {
       validationObj.add_error('Images posted to Facebook must be less than 4 MB.');
     } else if (extension === '.png' && size > 1 * 1024 * 1024) {
       validationObj.add_warning('PNG files should be less than 1MB when published to Facebook. PNG files larger than 1 MB may appear pixelated after upload.');
     }
-  } else if (SUPPORTED_VIDEO_EXTENSIONS.includes(extension)) {
+  } else if (FACEBOOK_VIDEO_EXTENSIONS.includes(extension)) {
     const lowerAspectRatio = 9 / 16;
     const upperAspectRatio = 16 / 9;
     const aspectRatioArr = get(streamsObj, 'video.display_aspect_ratio', '').split(':');
@@ -98,8 +98,8 @@ function validateFacebookMedia (media) {
     all,
   };
   if (media) {
-    const img_count = media.filter(instance => SUPPORTED_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
-    const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
+    const img_count = media.filter(instance => FACEBOOK_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
+    const video_count = media.filter(instance => FACEBOOK_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
     // if(img_count > 4) all.add_error('Only 4 images can be attached to a facebook post at this time.');
     if (video_count > 1) all.add_error('Only 1 video can be attached to a facebook post at this time.');
     const media_type_count = [img_count, video_count].filter(count => count > 0).length;
@@ -123,8 +123,8 @@ function validate_facebook (post, integration) {
 }
 
 module.exports = {
-  SUPPORTED_IMAGE_EXTENSIONS,
-  SUPPORTED_VIDEO_EXTENSIONS,
+  FACEBOOK_IMAGE_EXTENSIONS,
+  FACEBOOK_VIDEO_EXTENSIONS,
   validate_facebook,
   validateFacebookBody,
   validateFacebookMetadata,
