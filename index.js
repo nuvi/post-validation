@@ -1,4 +1,5 @@
 const validate_post = require('./src/schema/validate_post');
+const validate_all = require('./src/validate_all');
 const {
   FACEBOOK_IMAGE_EXTENSIONS,
   FACEBOOK_VIDEO_EXTENSIONS,
@@ -19,9 +20,14 @@ const {
   LINKEDIN_VIDEO_EXTENSIONS,
   LINKEDIN_MAX_CONTIGUOUS_SIZE,
 } = require('./src/validateLinkedin');
+const {
+  validatePinterestBody,
+  validatePinterestMetadata,
+} = require('./src/validatePinterest');
 
 module.exports = {
   validate_post,
+  validate_all,
   FACEBOOK_IMAGE_EXTENSIONS,
   FACEBOOK_VIDEO_EXTENSIONS,
   validate_facebook,
@@ -34,4 +40,6 @@ module.exports = {
   LINKEDIN_IMAGE_EXTENSIONS,
   LINKEDIN_VIDEO_EXTENSIONS,
   LINKEDIN_MAX_CONTIGUOUS_SIZE,
+  validatePinterestBody,
+  validatePinterestMetadata,
 };
