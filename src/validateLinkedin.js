@@ -4,7 +4,7 @@ const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
 const crossStreams = require('./crossStreams');
 
-const MAX_CONTIGUOUS_SIZE = 200 * 1024 * 1024;
+const LINKEDIN_MAX_CONTIGUOUS_SIZE = 200 * 1024 * 1024;
 
 function validateLinkedinBody (body, media) {
   const maxCharacters = 3000;
@@ -40,14 +40,14 @@ function validateLinkedinLinkTitle (link_title) {
   return validationObj;
 }
 
-const SUPPORTED_IMAGE_EXTENSIONS = [
+const LINKEDIN_IMAGE_EXTENSIONS = [
   '.gif',
   '.jpeg',
   '.jpg',
   '.png',
 ];
 
-const SUPPORTED_VIDEO_EXTENSIONS = [
+const LINKEDIN_VIDEO_EXTENSIONS = [
 //   '.avi',
 //   '.flv',
 //   '.m4v',
@@ -70,14 +70,14 @@ function validateLinkedinMetadata (metadata) {
 
   const { extension, size } = metadata;
 
-  if (size > MAX_CONTIGUOUS_SIZE) validationObj.add_error("Linkedin's API does not currently accept files above 200MB.");
+  if (size > LINKEDIN_MAX_CONTIGUOUS_SIZE) validationObj.add_error("Linkedin's API does not currently accept files above 200MB.");
 
   const streamsObj = crossStreams(metadata);
-  if (SUPPORTED_IMAGE_EXTENSIONS.includes(extension)) {
+  if (LINKEDIN_IMAGE_EXTENSIONS.includes(extension)) {
     if (countPixels(streamsObj) > MAX_PIXELS) {
       validationObj.add_error(`File size must not exceed ${MAX_PIXELS} pixels.`);
     }
-  } else if (SUPPORTED_VIDEO_EXTENSIONS.includes(extension)) { // eslint-disable-line no-empty
+  } else if (LINKEDIN_VIDEO_EXTENSIONS.includes(extension)) { // eslint-disable-line no-empty
   } else {
     validationObj.add_error('Only images and videos can be uploaded to LinkedIn through the API.');
   }
@@ -92,8 +92,8 @@ function validateLinkedinMedia (media, link_url) {
   };
 
   const article_count = link_url ? 1 : 0;
-  const img_count = media.filter(instance => SUPPORTED_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
-  const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
+  const img_count = media.filter(instance => LINKEDIN_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
+  const video_count = media.filter(instance => LINKEDIN_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
 
   if (video_count > 1) all.add_error('Only 1 video can be attached to a LinkedIn post at this time.');
 
@@ -124,7 +124,7 @@ module.exports = {
   validate_linkedin,
   validateLinkedinBody,
   validateLinkedinMetadata,
-  SUPPORTED_IMAGE_EXTENSIONS,
-  SUPPORTED_VIDEO_EXTENSIONS,
-  MAX_CONTIGUOUS_SIZE,
+  LINKEDIN_IMAGE_EXTENSIONS,
+  LINKEDIN_VIDEO_EXTENSIONS,
+  LINKEDIN_MAX_CONTIGUOUS_SIZE,
 };

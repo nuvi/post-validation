@@ -11,7 +11,7 @@ const { validate_twitter } = require('./validateTwitter');
 const { validate_youtube } = require('./validateYoutube');
 const { validate_instagram } = require('./validateInstagram');
 const { validate_google_my_business } = require('./validateGoogleMyBusiness');
-const { validate_assistant } = require('./validateAssistant');
+const validate_assistant = require('./validateAssistant');
 const { validate_tiktok } = require('./validateTikTok');
 const publishingKnex = require('../../connections/publishingKnex');
 

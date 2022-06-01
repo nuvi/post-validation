@@ -18,15 +18,11 @@ function validateAssistantMedia () {
   return response;
 }
 
-function validate_assistant (post, integration) {
+module.exports = function validate_assistant (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
     body: validateAssistantBody(post.body),
     media: validateAssistantMedia(post.media),
   };
-}
-
-module.exports = {
-  validate_assistant,
 };
