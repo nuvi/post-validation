@@ -6,7 +6,7 @@ const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
 const validateLinkImage = require('./validateLinkImage');
 const crossStreams = require('./crossStreams');
-const { threadRegex } = require('../../utils/regex');
+const { threadRegex } = require('./regex');
 
 // TODO: check if they text they are wanting to send is the same as the text in their last tweet
 

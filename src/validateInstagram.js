@@ -2,7 +2,7 @@ const ValidationObj = require('./ValidationObj');
 const crossStreams = require('./crossStreams');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
-const { threadRegex } = require('../../utils/regex');
+const { threadRegex } = require('./regex');
 
 const SUPPORTED_IMAGE_EXTENSIONS = [
   '.jpeg',

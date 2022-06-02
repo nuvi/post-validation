@@ -13,12 +13,8 @@ const { validate_instagram } = require('./validateInstagram');
 const { validate_google_my_business } = require('./validateGoogleMyBusiness');
 const validate_assistant = require('./validateAssistant');
 const { validate_tiktok } = require('./validateTikTok');
-const publishingKnex = require('../../connections/publishingKnex');
 
-module.exports = async function validate_all (post) {
-  let integration = null;
-  if (post.platformId === 'campaign-placeholder') integration = { platform: post.platform };
-  else [integration] = await publishingKnex('Integrations').where({ companyGuid: post.companyGuid, platform: post.platform, platformId: post.platformId || '' });
+module.exports = async function validate_all (post, integration) {
   if (!integration) {
     const response = {
       platformId: post.platformId,
