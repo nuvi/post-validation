@@ -42,7 +42,7 @@ function validateTwitterBody (body, hasMedia = false) {
 
 const SUPPORTED_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];
 const SUPPORTED_GIF_EXTENSIONS = ['.gif'];
-const SUPPORTED_VIDEO_EXTENSIONS = ['.mp4'];
+const TWITTER_VIDEO_EXTENSIONS = ['.mp4'];
 
 const LOWER_ASPECT_RATIO = 1 / 3;
 const UPPER_ASPECT_RATIO = 3 / 1;
@@ -76,7 +76,7 @@ async function validateTwitterMetadata (metadata, media_url) {
     } else {
       validationObj.add_error('Cannot publish a static gif to Twitter');
     }
-  } else if (SUPPORTED_VIDEO_EXTENSIONS.includes(extension)) {
+  } else if (TWITTER_VIDEO_EXTENSIONS.includes(extension)) {
     const fps = Number(r_frame_rate.split('/')[0]);
     const resolution = `${width}x${height}`;
 
@@ -124,7 +124,7 @@ async function validateTwitterMedia (media) {
   const all = new ValidationObj();
   const img_count = media.filter(instance => SUPPORTED_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
   const gif_count = media.filter(instance => SUPPORTED_GIF_EXTENSIONS.includes(instance.metadata.extension)).length;
-  const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
+  const video_count = media.filter(instance => TWITTER_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
   if (img_count > 4) all.add_error('Only 4 images can be attached to a tweet at this time.');
   if (gif_count > 1) all.add_error('Only 1 gif can be attached to a tweet at this time.');
   if (video_count > 1) all.add_error('Only 1 video can be attached to a tweet at this time.');
@@ -154,4 +154,5 @@ module.exports = {
   validate_twitter,
   validateTwitterBody,
   validateTwitterMetadata,
+  TWITTER_VIDEO_EXTENSIONS,
 };
