@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-const isAnimated = require('is-animated');
 const twitterText = require('twitter-text');
 
 const ValidationObj = require('./ValidationObj');
@@ -49,7 +47,7 @@ const UPPER_ASPECT_RATIO = 3 / 1;
 const RECOMMENDED_ASPECT_RATIOS = ['16:9', '9:16', '1:1'];
 
 // https://developer.twitter.com/en/docs/media/upload-media/uploading-media/media-best-practices
-async function validateTwitterMetadata (metadata, media_url) {
+async function validateTwitterMetadata (metadata) {
   const validationObj = new ValidationObj();
 
   const { extension, size, duration } = metadata;
@@ -65,9 +63,7 @@ async function validateTwitterMetadata (metadata, media_url) {
     // errors
     if (size > 5000000) validationObj.add_error('File size must not exceed 5 MB');
   } else if (SUPPORTED_GIF_EXTENSIONS.includes(extension)) {
-    const imgResult = await fetch(media_url);
-    const imgBuffer = await imgResult.buffer();
-    if (isAnimated(imgBuffer)) { // TODO: get rid of network calls; figure  out how to check this solely from the metadata already available
+    if (nb_frames > 1) {
       // errors
       if (size > 15000000) validationObj.add_error('File size must not exceed 15 MB');
       if (width > 1280 || height > 1080) validationObj.add_error('Resolution must be <= 1280x1080 (width x height)');
@@ -134,7 +130,7 @@ async function validateTwitterMedia (media) {
     all,
   };
   for (const instance of media) {
-    response[instance.id] = await validateTwitterMetadata(instance.metadata, instance.media_url);
+    response[instance.id] = await validateTwitterMetadata(instance.metadata);
   }
   return response;
 }
