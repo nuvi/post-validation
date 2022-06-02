@@ -151,9 +151,6 @@ async function validate_twitter (post, integration) {
 }
 
 module.exports = {
-  SUPPORTED_GIF_EXTENSIONS,
-  SUPPORTED_IMAGE_EXTENSIONS,
-  SUPPORTED_VIDEO_EXTENSIONS,
   validate_twitter,
   validateTwitterBody,
   validateTwitterMetadata,

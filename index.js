@@ -24,6 +24,13 @@ const {
   validatePinterestBody,
   validatePinterestMetadata,
 } = require('./src/validatePinterest');
+const {
+  validateTikTokMetadata,
+} = require('./src/validateTikTok');
+const {
+  validateTwitterBody,
+  validateTwitterMetadata,
+} = require('./src/validateTwitter');
 
 module.exports = {
   validate_post,
@@ -42,4 +49,7 @@ module.exports = {
   LINKEDIN_MAX_CONTIGUOUS_SIZE,
   validatePinterestBody,
   validatePinterestMetadata,
+  validateTikTokMetadata,
+  validateTwitterBody,
+  validateTwitterMetadata,
 };
