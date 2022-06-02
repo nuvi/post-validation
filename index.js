@@ -36,6 +36,9 @@ const {
   validateYoutubeBody,
   validateYoutubeMetadata,
 } = require('./src/validateYoutube');
+const {
+  threadRegex,
+} = require('./src/regex');
 
 module.exports = {
   validate_post,
@@ -60,4 +63,5 @@ module.exports = {
   TWITTER_VIDEO_EXTENSIONS,
   validateYoutubeBody,
   validateYoutubeMetadata,
+  threadRegex,
 };
