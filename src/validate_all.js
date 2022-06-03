@@ -14,7 +14,7 @@ const { validate_google_my_business } = require('./validateGoogleMyBusiness');
 const validate_assistant = require('./validateAssistant');
 const { validate_tiktok } = require('./validateTikTok');
 
-module.exports = async function validate_all (post, integration) {
+module.exports = function validate_all (post, integration) {
   if (!integration) {
     const response = {
       platformId: post.platformId,

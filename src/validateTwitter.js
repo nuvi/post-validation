@@ -47,7 +47,7 @@ const UPPER_ASPECT_RATIO = 3 / 1;
 const RECOMMENDED_ASPECT_RATIOS = ['16:9', '9:16', '1:1'];
 
 // https://developer.twitter.com/en/docs/media/upload-media/uploading-media/media-best-practices
-async function validateTwitterMetadata (metadata) {
+function validateTwitterMetadata (metadata) {
   const validationObj = new ValidationObj();
 
   const { extension, size, duration } = metadata;
@@ -116,7 +116,7 @@ async function validateTwitterMetadata (metadata) {
   return validationObj;
 }
 
-async function validateTwitterMedia (media) {
+function validateTwitterMedia (media) {
   const all = new ValidationObj();
   const img_count = media.filter(instance => SUPPORTED_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
   const gif_count = media.filter(instance => SUPPORTED_GIF_EXTENSIONS.includes(instance.metadata.extension)).length;
@@ -130,18 +130,18 @@ async function validateTwitterMedia (media) {
     all,
   };
   for (const instance of media) {
-    response[instance.id] = await validateTwitterMetadata(instance.metadata);
+    response[instance.id] = validateTwitterMetadata(instance.metadata);
   }
   return response;
 }
 
-async function validate_twitter (post, integration) {
+function validate_twitter (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
     body: validateTwitterBody(post.body, Boolean(post.media && post.media.length)),
     link: validateUrl(post.link_url),
-    media: await validateTwitterMedia(post.media),
+    media: validateTwitterMedia(post.media),
     link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, post.platform),
   };
 }
