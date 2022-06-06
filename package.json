@@ -18,7 +18,7 @@
   "private": true,
   "dependencies": {
     "ajv": "^6.12.6",
-    "twitter-text": "^3.1.0"
+    "twitter-text": "^3.0.1"
   },
   "devDependencies": {
     "eslint": "^5.10.0",
