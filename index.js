@@ -39,6 +39,7 @@ const {
 const {
   threadRegex,
 } = require('./src/regex');
+const ValidationObj = require('./src/ValidationObj');
 
 module.exports = {
   validate_post,
@@ -64,4 +65,5 @@ module.exports = {
   validateYoutubeBody,
   validateYoutubeMetadata,
   threadRegex,
+  ValidationObj,
 };

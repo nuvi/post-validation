@@ -2,8 +2,6 @@ const {
   ASSISTANT, FACEBOOK, TWITTER, LINKEDIN, PINTEREST, YOUTUBE, INSTAGRAM, GOOGLE_MY_BUSINESS, TIKTOK,
 } = require('./enums');
 
-const ValidationObj = require('./ValidationObj');
-
 const { validate_facebook } = require('./validateFacebook');
 const { validate_linkedin } = require('./validateLinkedin');
 const { validate_pinterest } = require('./validatePinterest');
@@ -15,25 +13,6 @@ const validate_assistant = require('./validateAssistant');
 const { validate_tiktok } = require('./validateTikTok');
 
 module.exports = function validate_all (post, integration) {
-  if (!integration) {
-    const response = {
-      platformId: post.platformId,
-      platform: post.platform,
-      body: new ValidationObj(),
-    };
-    response.body.add_error('Integration associated with this post was removed!');
-    return response;
-  }
-  if (!post.publishAt) {
-    const response = {
-      platormId: post.platformId,
-      platform: post.platform,
-      body: new ValidationObj(),
-    };
-    response.body.add_error('One or more locations are missing a valid timezone.');
-    return response;
-  }
-
   if (integration.platform === FACEBOOK) return validate_facebook(post, integration);
   if (integration.platform === LINKEDIN) return validate_linkedin(post, integration);
   if (integration.platform === PINTEREST) return validate_pinterest(post, integration);
