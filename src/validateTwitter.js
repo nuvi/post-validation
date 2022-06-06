@@ -1,4 +1,7 @@
-const twitterText = require('twitter-text');
+const isFunction = require('lodash/isFunction');
+const { parseTweet } = require('twitter-text');
+
+if (!isFunction(parseTweet)) throw new Error('Error importing from twitter-text: parseTweet is not a function!');
 
 const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
@@ -9,7 +12,7 @@ const { threadRegex } = require('./regex');
 // TODO: check if they text they are wanting to send is the same as the text in their last tweet
 
 function validateTwitterBody (body, hasMedia = false) {
-  const parsedTweet = twitterText.parseTweet(body);
+  const parsedTweet = parseTweet(body);
 
   const validationObj = new ValidationObj();
   validationObj.validationObj = parsedTweet.weightedLength;
@@ -23,7 +26,7 @@ function validateTwitterBody (body, hasMedia = false) {
   if (bodies.length > 20) validationObj.add_warning('Having more than 20 replies Twitter may flag the account as spam');
 
   bodies.forEach((msg, index) => {
-    const parsedThread = twitterText.parseTweet(msg);
+    const parsedThread = parseTweet(msg);
     const tweetNumber = index !== 0 ? `reply #${index}` : 'primary Tweet';
     if (parsedThread.permillage > 1000) validationObj.add_error(`Message too long in ${tweetNumber}`, 1001, msg.length);
     else if (!parsedThread.valid && (!hasMedia || index !== 0)) validationObj.add_error(`Invalid post body in ${tweetNumber}`);
