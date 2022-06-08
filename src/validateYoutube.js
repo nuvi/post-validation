@@ -58,6 +58,7 @@ function validateYoutubeMedia (media) {
   const all = new ValidationObj();
   const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
   if (video_count > 1) all.add_error('Only 1 video can be uploaded to youtube at a time.');
+  if (video_count < 1) all.add_error('Youtube posts require a video.');
   const response = {
     all,
   };
