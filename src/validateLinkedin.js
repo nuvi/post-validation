@@ -1,4 +1,5 @@
 const get = require('lodash/get');
+const isObject = require('lodash/isObject');
 
 const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
@@ -87,24 +88,30 @@ function validateLinkedinMetadata (metadata) {
 
 function validateLinkedinMedia (media, link_url) {
   const all = new ValidationObj();
-  const response = {
-    all,
-  };
+  const response = { all };
 
-  const article_count = link_url ? 1 : 0;
-  const img_count = media.filter(instance => LINKEDIN_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
-  const video_count = media.filter(instance => LINKEDIN_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
+  if (media) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
 
-  if (video_count > 1) all.add_error('Only 1 video can be attached to a LinkedIn post at this time.');
+    const article_count = link_url ? 1 : 0;
+    const img_count = media.filter(instance => LINKEDIN_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
+    const video_count = media.filter(instance => LINKEDIN_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
 
-  if (img_count > 9) all.add_error('Only up to 9 images can be attached to a LinkedIn post at this time.');
+    if (video_count > 1) all.add_error('Only 1 video can be attached to a LinkedIn post at this time.');
 
-  const media_type_count = [article_count, img_count, video_count].filter(count => count > 0).length;
-  if (media_type_count > 1) all.add_error('Only 1 type of media (link, image, video) can be attached to a LinkedIn post at this time.');
+    if (img_count > 9) all.add_error('Only up to 9 images can be attached to a LinkedIn post at this time.');
 
-  for (const instance of media) {
-    response[instance.id] = validateLinkedinMetadata(instance.metadata);
+    const media_type_count = [article_count, img_count, video_count].filter(count => count > 0).length;
+    if (media_type_count > 1) all.add_error('Only 1 type of media (link, image, video) can be attached to a LinkedIn post at this time.');
+
+    for (const instance of media) {
+      response[instance.id] = validateLinkedinMetadata(instance.metadata);
+    }
   }
+
   return response;
 }
 

@@ -1,4 +1,5 @@
 const get = require('lodash/get');
+const isObject = require('lodash/isObject');
 
 const ValidationObj = require('./ValidationObj');
 
@@ -99,19 +100,20 @@ function validateGMBDetails (details) {
 function validateGMBMedia (media) {
   const all = new ValidationObj();
 
+  const response = { all };
+
   if (!media || media.length !== 1) {
     all.add_error('Must include exactly 1 image to post to Google My Business');
   } else {
-    const metadata = media[0].metadata;
-    const { extension } = metadata;
-    if (!SUPPORTED_IMAGE_EXTENSIONS.includes(extension)) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
+
+    if (!SUPPORTED_IMAGE_EXTENSIONS.includes(media[0].metadata.extension)) {
       all.add_error(`Unsupported file type. Must be one of ${SUPPORTED_IMAGE_EXTENSIONS.join(', ')}`);
     }
   }
-
-  const response = {
-    all,
-  };
 
   return response;
 }

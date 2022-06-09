@@ -1,7 +1,9 @@
-const ValidationObj = require('./ValidationObj');
-const crossStreams = require('./crossStreams');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
+const isObject = require('lodash/isObject');
+
+const ValidationObj = require('./ValidationObj');
+const crossStreams = require('./crossStreams');
 const { threadRegex } = require('./regex');
 
 const SUPPORTED_IMAGE_EXTENSIONS = [
@@ -92,11 +94,14 @@ function validateInstagramMedia (media) {
   if (!media || media.length === 0) all.add_error('Must include at least 1 image/video to automatically post to Instagram.');
   if (media.length > 10) all.add_error('Maximum of 10 images/videos to automatically post to Instagram');
 
-  const response = {
-    all,
-  };
+  const response = { all };
 
   if (media && media.length) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
+
     for (const instance of media) {
       response[instance.id] = validateInstagramMetadata(instance.metadata);
     }
