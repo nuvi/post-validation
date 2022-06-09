@@ -1,4 +1,5 @@
 const get = require('lodash/get');
+const isObject = require('lodash/isObject');
 
 const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
@@ -94,10 +95,13 @@ function validateFacebookMetadata (metadata) {
 
 function validateFacebookMedia (media) {
   const all = new ValidationObj();
-  const response = {
-    all,
-  };
+  const response = { all };
   if (media) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
+
     const img_count = media.filter(instance => FACEBOOK_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
     const video_count = media.filter(instance => FACEBOOK_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
     // if(img_count > 4) all.add_error('Only 4 images can be attached to a facebook post at this time.');

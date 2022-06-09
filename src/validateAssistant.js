@@ -9,9 +9,7 @@ function validateAssistantBody () {
 function validateAssistantMedia () {
   const all = new ValidationObj();
 
-  const response = {
-    all,
-  };
+  const response = { all };
 
   // No validation for now
 

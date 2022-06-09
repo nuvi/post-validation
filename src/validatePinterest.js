@@ -1,3 +1,5 @@
+const isObject = require('lodash/isObject');
+
 const ValidationObj = require('./ValidationObj');
 const crossStreams = require('./crossStreams');
 const urlRegex = require('./urlRegex');
@@ -38,17 +40,22 @@ function validatePinterestMetadata (metadata) {
 
 function validatePinterestMedia (media) {
   const all = new ValidationObj();
-  if (media.length < 1) {
-    all.add_error('Pinterest requires that an image be attached to each pin.');
-  }
-  if (media.length > 1) {
-    all.add_error('Only 1 image can be attached to a pin.');
-  }
-  const response = {
-    all,
-  };
-  for (const instance of media) {
-    response[instance.id] = validatePinterestMetadata(instance.metadata);
+  const response = { all };
+  if (media) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
+
+    if (media.length < 1) {
+      all.add_error('Pinterest requires that an image be attached to each pin.');
+    }
+    if (media.length > 1) {
+      all.add_error('Only 1 image can be attached to a pin.');
+    }
+    for (const instance of media) {
+      response[instance.id] = validatePinterestMetadata(instance.metadata);
+    }
   }
   return response;
 }

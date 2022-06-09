@@ -1,3 +1,5 @@
+const isObject = require('lodash/isObject');
+
 const ValidationObj = require('./ValidationObj');
 const crossStreams = require('./crossStreams');
 
@@ -56,14 +58,20 @@ function validateYoutubeMetadata (metadata) {
 
 function validateYoutubeMedia (media) {
   const all = new ValidationObj();
-  const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
-  if (video_count > 1) all.add_error('Only 1 video can be uploaded to youtube at a time.');
-  if (video_count < 1) all.add_error('Youtube posts require a video.');
-  const response = {
-    all,
-  };
-  for (const instance of media) {
-    response[instance.id] = validateYoutubeMetadata(instance.metadata);
+  const response = { all };
+  if (media) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
+
+    const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
+    if (video_count > 1) all.add_error('Only 1 video can be uploaded to youtube at a time.');
+    if (video_count < 1) all.add_error('Youtube posts require a video.');
+
+    for (const instance of media) {
+      response[instance.id] = validateYoutubeMetadata(instance.metadata);
+    }
   }
   return response;
 }

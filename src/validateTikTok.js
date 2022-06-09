@@ -1,6 +1,8 @@
+const get = require('lodash/get');
+const isObject = require('lodash/isObject');
+
 const ValidationObj = require('./ValidationObj');
 const crossStreams = require('./crossStreams');
-const get = require('lodash/get');
 
 const SUPPORTED_VIDEO_EXTENSIONS = ['.mpeg4', '.mp4', '.webm'];
 
@@ -35,14 +37,20 @@ function validateTikTokMetadata (metadata) {
 
 function validateTikTokMedia (media) {
   const all = new ValidationObj();
-  const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
-  if (!video_count) all.add_error(`Must include one video in one of the following formats: ${SUPPORTED_VIDEO_EXTENSIONS.join(', ')}.`);
-  if (video_count > 1) all.add_error('Only 1 video can be uploaded to TikTok at a time.');
-  const response = {
-    all,
-  };
-  for (const instance of media) {
-    response[instance.id] = validateTikTokMetadata(instance.metadata);
+  const response = { all };
+  if (media) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
+
+    const video_count = media.filter(instance => SUPPORTED_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
+    if (!video_count) all.add_error(`Must include one video in one of the following formats: ${SUPPORTED_VIDEO_EXTENSIONS.join(', ')}.`);
+    if (video_count > 1) all.add_error('Only 1 video can be uploaded to TikTok at a time.');
+
+    for (const instance of media) {
+      response[instance.id] = validateTikTokMetadata(instance.metadata);
+    }
   }
   return response;
 }

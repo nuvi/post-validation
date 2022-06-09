@@ -1,4 +1,5 @@
 const isFunction = require('lodash/isFunction');
+const isObject = require('lodash/isObject');
 const { parseTweet } = require('twitter-text');
 
 if (!isFunction(parseTweet)) throw new Error('Error importing from twitter-text: parseTweet is not a function!');
@@ -121,19 +122,25 @@ function validateTwitterMetadata (metadata) {
 
 function validateTwitterMedia (media) {
   const all = new ValidationObj();
-  const img_count = media.filter(instance => SUPPORTED_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
-  const gif_count = media.filter(instance => SUPPORTED_GIF_EXTENSIONS.includes(instance.metadata.extension)).length;
-  const video_count = media.filter(instance => TWITTER_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
-  if (img_count > 4) all.add_error('Only 4 images can be attached to a tweet at this time.');
-  if (gif_count > 1) all.add_error('Only 1 gif can be attached to a tweet at this time.');
-  if (video_count > 1) all.add_error('Only 1 video can be attached to a tweet at this time.');
-  const media_type_count = [img_count, gif_count, video_count].filter(count => count > 0).length;
-  if (media_type_count > 1) all.add_error('Only 1 type of media (image, gif, video) can be attached to a tweet at this time.');
-  const response = {
-    all,
-  };
-  for (const instance of media) {
-    response[instance.id] = validateTwitterMetadata(instance.metadata);
+  const response = { all };
+  if (media) {
+    if (media.some(instance => !isObject(instance.metadata))) {
+      all.add_error('Media metadata analysis unavailable. Please check back later.');
+      return response;
+    }
+
+    const img_count = media.filter(instance => SUPPORTED_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
+    const gif_count = media.filter(instance => SUPPORTED_GIF_EXTENSIONS.includes(instance.metadata.extension)).length;
+    const video_count = media.filter(instance => TWITTER_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
+    if (img_count > 4) all.add_error('Only 4 images can be attached to a tweet at this time.');
+    if (gif_count > 1) all.add_error('Only 1 gif can be attached to a tweet at this time.');
+    if (video_count > 1) all.add_error('Only 1 video can be attached to a tweet at this time.');
+    const media_type_count = [img_count, gif_count, video_count].filter(count => count > 0).length;
+    if (media_type_count > 1) all.add_error('Only 1 type of media (image, gif, video) can be attached to a tweet at this time.');
+
+    for (const instance of media) {
+      response[instance.id] = validateTwitterMetadata(instance.metadata);
+    }
   }
   return response;
 }
