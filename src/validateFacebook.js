@@ -62,7 +62,6 @@ const FACEBOOK_VIDEO_EXTENSIONS = [
 // video (in use): https://developers.facebook.com/docs/graph-api/reference/page/videos
 // image: https://developers.facebook.com/docs/graph-api/photo-uploads
 function validateFacebookMetadata (metadata) {
-  console.log(metadata);
   const validationObj = new ValidationObj();
 
   const { extension, size, duration } = metadata;
