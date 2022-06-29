@@ -30,9 +30,9 @@ const {
 const {
   validateTwitterBody,
   validateTwitterMetadata,
+  validateTwitterImageDimensions,
   TWITTER_IMAGE_EXTENSIONS,
   TWITTER_VIDEO_EXTENSIONS,
-  TWITTER_MAX_IMAGE_DIMENSIONS,
 } = require('./src/validateTwitter');
 const {
   validateYoutubeBody,
@@ -63,9 +63,9 @@ module.exports = {
   validateTikTokMetadata,
   validateTwitterBody,
   validateTwitterMetadata,
+  validateTwitterImageDimensions,
   TWITTER_IMAGE_EXTENSIONS,
   TWITTER_VIDEO_EXTENSIONS,
-  TWITTER_MAX_IMAGE_DIMENSIONS,
   validateYoutubeBody,
   validateYoutubeMetadata,
   threadRegex,

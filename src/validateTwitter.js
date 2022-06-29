@@ -150,6 +150,15 @@ function validateTwitterMedia (media) {
   return response;
 }
 
+function validateTwitterImageDimensions (metadata) {
+  const streamsObj = crossStreams(metadata);
+  const { width, height } = streamsObj.video || {};
+  if (width > TWITTER_MAX_IMAGE_DIMENSIONS.width || height > TWITTER_IMAGE_EXTENSIONS.height) {
+    return false;
+  }
+  return true;
+}
+
 function validate_twitter (post, integration) {
   return {
     integration: integration.id,
@@ -165,7 +174,7 @@ module.exports = {
   validate_twitter,
   validateTwitterBody,
   validateTwitterMetadata,
+  validateTwitterImageDimensions,
   TWITTER_VIDEO_EXTENSIONS,
   TWITTER_IMAGE_EXTENSIONS,
-  TWITTER_MAX_IMAGE_DIMENSIONS,
 };
