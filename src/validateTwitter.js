@@ -177,4 +177,5 @@ module.exports = {
   validateTwitterImageDimensions,
   TWITTER_VIDEO_EXTENSIONS,
   TWITTER_IMAGE_EXTENSIONS,
+  TWITTER_MAX_IMAGE_DIMENSIONS,
 };
