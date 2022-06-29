@@ -153,7 +153,7 @@ function validateTwitterMedia (media) {
 function validateTwitterImageDimensions (metadata) {
   const streamsObj = crossStreams(metadata);
   const { width, height } = streamsObj.video || {};
-  if (width > TWITTER_MAX_IMAGE_DIMENSIONS.width || height > TWITTER_IMAGE_EXTENSIONS.height) {
+  if (width > TWITTER_MAX_IMAGE_DIMENSIONS.width || height > TWITTER_MAX_IMAGE_DIMENSIONS.height) {
     return false;
   }
   return true;
