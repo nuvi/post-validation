@@ -46,6 +46,11 @@ const TWITTER_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];
 const SUPPORTED_GIF_EXTENSIONS = ['.gif'];
 const TWITTER_VIDEO_EXTENSIONS = ['.mp4'];
 
+const TWITTER_MAX_IMAGE_DIMENSIONS = {
+  width: 8192,
+  height: 8192,
+};
+
 const LOWER_ASPECT_RATIO = 1 / 3;
 const UPPER_ASPECT_RATIO = 3 / 1;
 const RECOMMENDED_ASPECT_RATIOS = ['16:9', '9:16', '1:1'];
@@ -162,4 +167,5 @@ module.exports = {
   validateTwitterMetadata,
   TWITTER_VIDEO_EXTENSIONS,
   TWITTER_IMAGE_EXTENSIONS,
+  TWITTER_MAX_IMAGE_DIMENSIONS,
 };
