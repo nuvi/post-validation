@@ -30,6 +30,7 @@ const {
 const {
   validateTwitterBody,
   validateTwitterMetadata,
+  TWITTER_IMAGE_EXTENSIONS,
   TWITTER_VIDEO_EXTENSIONS,
 } = require('./src/validateTwitter');
 const {
@@ -61,6 +62,7 @@ module.exports = {
   validateTikTokMetadata,
   validateTwitterBody,
   validateTwitterMetadata,
+  TWITTER_IMAGE_EXTENSIONS,
   TWITTER_VIDEO_EXTENSIONS,
   validateYoutubeBody,
   validateYoutubeMetadata,

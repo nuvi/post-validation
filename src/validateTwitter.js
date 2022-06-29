@@ -42,7 +42,7 @@ function validateTwitterBody (body, hasMedia = false) {
   return validationObj;
 }
 
-const SUPPORTED_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];
+const TWITTER_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];
 const SUPPORTED_GIF_EXTENSIONS = ['.gif'];
 const TWITTER_VIDEO_EXTENSIONS = ['.mp4'];
 
@@ -63,7 +63,7 @@ function validateTwitterMetadata (metadata) {
     codec_name: audio_codec_name, profile, channel_layout, bit_rate: audio_bit_rate,
   } = streamsObj.audio || {};
 
-  if (SUPPORTED_IMAGE_EXTENSIONS.includes(extension)) {
+  if (TWITTER_IMAGE_EXTENSIONS.includes(extension)) {
     // errors
     if (size > 5000000) validationObj.add_error('File size must not exceed 5 MB');
   } else if (SUPPORTED_GIF_EXTENSIONS.includes(extension)) {
@@ -129,7 +129,7 @@ function validateTwitterMedia (media) {
       return response;
     }
 
-    const img_count = media.filter(instance => SUPPORTED_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
+    const img_count = media.filter(instance => TWITTER_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
     const gif_count = media.filter(instance => SUPPORTED_GIF_EXTENSIONS.includes(instance.metadata.extension)).length;
     const video_count = media.filter(instance => TWITTER_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
     if (img_count > 4) all.add_error('Only 4 images can be attached to a tweet at this time.');
@@ -161,4 +161,5 @@ module.exports = {
   validateTwitterBody,
   validateTwitterMetadata,
   TWITTER_VIDEO_EXTENSIONS,
+  TWITTER_IMAGE_EXTENSIONS,
 };
