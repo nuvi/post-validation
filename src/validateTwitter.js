@@ -47,8 +47,8 @@ const SUPPORTED_GIF_EXTENSIONS = ['.gif'];
 const TWITTER_VIDEO_EXTENSIONS = ['.mp4'];
 
 const TWITTER_MAX_IMAGE_DIMENSIONS = {
-  width: 8192,
-  height: 8192,
+  width: 4096,
+  height: 4096,
 };
 
 const LOWER_ASPECT_RATIO = 1 / 3;
