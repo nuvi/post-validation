@@ -34,10 +34,16 @@ const MAX_IMAGE_SIZE = 8000000;
 const MAX_CHARACTERS = 1600;
 
 const MAX_COMMENTS = 6;
+const MAX_HASHTAGS = 30;
 
 function validateInstagramBody (body) {
   const validationObj = new ValidationObj();
   const bodies = body.split(threadRegex);
+
+  const hashtags = body.match(/[^\s#]+/g);
+  if (hashtags.length > MAX_HASHTAGS) {
+    validationObj.add_error(`Post must not contain more than ${MAX_HASHTAGS} hashtags.`);
+  }
 
   if (bodies.length - 1 > MAX_COMMENTS) validationObj.add_error(`Post must not contain more than ${MAX_COMMENTS} comments.`);
   bodies.forEach((msg, index) => {
