@@ -40,7 +40,7 @@ function validateInstagramBody (body) {
   const validationObj = new ValidationObj();
   const bodies = body.split(threadRegex);
 
-  const hashtags = body.match(/[^\s#]+/g);
+  const hashtags = body.match(/#(\w+)/g);
   if (hashtags.length > MAX_HASHTAGS) {
     validationObj.add_error(`Post must not contain more than ${MAX_HASHTAGS} hashtags.`);
   }
