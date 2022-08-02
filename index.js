@@ -3,6 +3,8 @@ const validate_all = require('./src/validate_all');
 const {
   FACEBOOK_IMAGE_EXTENSIONS,
   FACEBOOK_VIDEO_EXTENSIONS,
+  FACEBOOK_MAX_IMAGE_SIZE,
+  FACEBOOK_MAX_VIDEO_DIMENSIONS,
   validate_facebook,
   validateFacebookBody,
   validateFacebookMetadata,
@@ -49,6 +51,8 @@ module.exports = {
   validate_all,
   FACEBOOK_IMAGE_EXTENSIONS,
   FACEBOOK_VIDEO_EXTENSIONS,
+  FACEBOOK_MAX_IMAGE_SIZE,
+  FACEBOOK_MAX_VIDEO_DIMENSIONS,
   validate_facebook,
   validateFacebookBody,
   validateFacebookMetadata,
