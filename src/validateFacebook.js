@@ -89,7 +89,9 @@ function validateFacebookMetadata (metadata) {
 
     if (size < 1024) validationObj.add_error('File size must exceed 1 KB');
     if (duration < 1) validationObj.add_error('Duration must be longer than 1 second');
-    if (get(streamsObj, 'video.height', 0) > FACEBOOK_MAX_VIDEO_DIMENSIONS.height) validationObj.add_warning("Videos with a resolution greater then 1080p will be resized to meet Facebook's video requirements.");
+    if (get(streamsObj, 'video.height', 0) > FACEBOOK_MAX_VIDEO_DIMENSIONS.height) {
+      validationObj.add_warning("Videos with a resolution greater then 1080p will be resized to meet Facebook's video requirements.");
+    }
     if (size > 1000000000) validationObj.add_error('File size must not exceed 1 GB');
     if (duration > 20 * 60) validationObj.add_error('Duration must be equal to or less than 20 minutes');
     if (aspectRatio < lowerAspectRatio || aspectRatio > upperAspectRatio) validationObj.add_error('Aspect ratio must be between 9:16 and 16:9');
