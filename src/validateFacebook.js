@@ -58,6 +58,13 @@ const FACEBOOK_VIDEO_EXTENSIONS = [
   '.wmv'
 ];
 
+const FACEBOOK_MAX_IMAGE_SIZE = 4194304;
+
+const FACEBOOK_MAX_VIDEO_DIMENSIONS = {
+  width: 1920,
+  height: 1080,
+};
+
 // video (future use): https://developers.facebook.com/docs/graph-api/video-uploads
 // video (in use): https://developers.facebook.com/docs/graph-api/reference/page/videos
 // image: https://developers.facebook.com/docs/graph-api/photo-uploads
@@ -69,8 +76,8 @@ function validateFacebookMetadata (metadata) {
 
   if (FACEBOOK_IMAGE_EXTENSIONS.includes(extension)) {
     if (extension === '.gif') validationObj.add_warning('GIFs can be uploaded but will not animate on facebook.');
-    if (size >= 4 * 1024 * 1024) {
-      validationObj.add_error('Images posted to Facebook must be less than 4 MB.');
+    if (size >= FACEBOOK_MAX_IMAGE_SIZE) {
+      validationObj.add_warning("Images larger than 4 MB will be resized to meet Facebook's image size requirements.");
     } else if (extension === '.png' && size > 1 * 1024 * 1024) {
       validationObj.add_warning('PNG files should be less than 1MB when published to Facebook. PNG files larger than 1 MB may appear pixelated after upload.');
     }
@@ -82,7 +89,7 @@ function validateFacebookMetadata (metadata) {
 
     if (size < 1024) validationObj.add_error('File size must exceed 1 KB');
     if (duration < 1) validationObj.add_error('Duration must be longer than 1 second');
-
+    if (get(streamsObj, 'video.height', 0) > FACEBOOK_MAX_VIDEO_DIMENSIONS.height) validationObj.add_warning("Videos with a resolution greater then 1080p will be resized to meet Facebook's video requirements.");
     if (size > 1000000000) validationObj.add_error('File size must not exceed 1 GB');
     if (duration > 20 * 60) validationObj.add_error('Duration must be equal to or less than 20 minutes');
     if (aspectRatio < lowerAspectRatio || aspectRatio > upperAspectRatio) validationObj.add_error('Aspect ratio must be between 9:16 and 16:9');
@@ -129,6 +136,8 @@ function validate_facebook (post, integration) {
 module.exports = {
   FACEBOOK_IMAGE_EXTENSIONS,
   FACEBOOK_VIDEO_EXTENSIONS,
+  FACEBOOK_MAX_IMAGE_SIZE,
+  FACEBOOK_MAX_VIDEO_DIMENSIONS,
   validate_facebook,
   validateFacebookBody,
   validateFacebookMetadata,
