@@ -7,12 +7,14 @@ const validateUrl = require('./validateUrl');
 const validateLinkImage = require('./validateLinkImage');
 const MAX_NOTE_LENGTH = 500;
 
-function validatePinterestBody (body) {
+function validatePinterestBody (body, postContentType) {
   const validationObj = new ValidationObj();
 
   if (body.length > MAX_NOTE_LENGTH) validationObj.add_error('Note too long', MAX_NOTE_LENGTH, body.length);
 
   if (body.match(urlRegex)) validationObj.add_error('pinterest post bodies cannot contain urls');
+
+  if (!postContentType === 'reel') validationObj.add_warning('Pinterest does not support Reels. This post will be published as a normal post.');
 
   return validationObj;
 }
@@ -75,7 +77,7 @@ function validate_pinterest (post, integration) {
     integration: integration.id,
     platform: integration.platform,
     // title: validatePinterestTitle(post.title),
-    body: validatePinterestBody(post.body),
+    body: validatePinterestBody(post.body, post.post_content_type),
     link: validatePinterestLink(post.link_url),
     media: validatePinterestMedia(post.media),
     link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, post.platform),

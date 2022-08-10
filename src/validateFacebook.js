@@ -6,12 +6,14 @@ const validateUrl = require('./validateUrl');
 const validateLinkImage = require('./validateLinkImage');
 const crossStreams = require('./crossStreams');
 
-function validateFacebookBody (body, hasMedia = false) {
+function validateFacebookBody (body, postContentType, hasMedia = false) {
   const maxCharacters = 63206;
   const validationObj = new ValidationObj();
 
   if (!hasMedia && (!body || typeof body !== 'string' || !body.length)) validationObj.add_error('Must have a body');
   if (body.length > maxCharacters) validationObj.add_error('too long');
+
+  if (postContentType === 'reel') validationObj.add_warning('Facebook does not support Reels. This post will be published as a normal post.');
 
   return validationObj;
 }
@@ -133,7 +135,7 @@ function validate_facebook (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateFacebookBody(post.body, Boolean(post.media && post.media.length)),
+    body: validateFacebookBody(post.body, post.post_content_type, Boolean(post.media && post.media.length)),
     media: validateFacebookMedia(post.media),
     link: validateUrl(post.link_url),
     link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, post.platform),

@@ -7,12 +7,14 @@ const crossStreams = require('./crossStreams');
 
 const LINKEDIN_MAX_CONTIGUOUS_SIZE = 200 * 1024 * 1024;
 
-function validateLinkedinBody (body, media) {
+function validateLinkedinBody (body, media, postContentType) {
   const maxCharacters = 3000;
   const validationObj = new ValidationObj();
 
   if ((!body && (!media || !media.length)) || typeof body !== 'string') validationObj.errors.push({ message: 'no content' });
   if (body.length > maxCharacters) validationObj.errors.push({ message: `only ${maxCharacters} characters allowed` });
+
+  if (postContentType === 'reel') validationObj.add_warning('LinkedIn does not support Reels. This post will be published as a normal post.');
 
   return validationObj;
 }
@@ -119,7 +121,7 @@ function validate_linkedin (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateLinkedinBody(post.body, post.media),
+    body: validateLinkedinBody(post.body, post.media, post.post_content_type),
     media: validateLinkedinMedia(post.media, post.link_url),
     link: validateUrl(post.link_url),
     link_caption: validateLinkedinLinkCaption(post.link_caption),
