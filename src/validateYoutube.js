@@ -16,11 +16,13 @@ function validateYoutubeTitle (title) {
   return validationObj;
 }
 
-function validateYoutubeBody (body) {
+function validateYoutubeBody (body, postContentType) {
   const validationObj = new ValidationObj();
 
   if (!body || typeof body !== 'string') validationObj.add_error('Must have a body');
   if (body.length > MAX_DESCRIPTION_LENGTH) validationObj.add_error('Description too long', 0, body.length);
+
+  if (!postContentType === 'reel') validationObj.add_warning('YouTube Shorts is not supported. This post will be published as a normal video.');
 
   return validationObj;
 }
@@ -81,7 +83,7 @@ function validate_youtube (post, integration) {
     integration: integration.id,
     platform: integration.platform,
     title: validateYoutubeTitle(post.title),
-    body: validateYoutubeBody(post.body),
+    body: validateYoutubeBody(post.body, post.post_content_type),
     media: validateYoutubeMedia(post.media),
   };
 }

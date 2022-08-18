@@ -12,7 +12,7 @@ const { threadRegex } = require('./regex');
 
 // TODO: check if they text they are wanting to send is the same as the text in their last tweet
 
-function validateTwitterBody (body, hasMedia = false) {
+function validateTwitterBody (body, postContentType, hasMedia = false) {
   const parsedTweet = parseTweet(body);
 
   const validationObj = new ValidationObj();
@@ -38,6 +38,8 @@ function validateTwitterBody (body, hasMedia = false) {
   while ((result = invalidChars.exec(body))) { // eslint-disable-line no-cond-assign
     validationObj.add_error('Invalid character', result.index, result.index + result.length);
   }
+
+  if (postContentType === 'reel') validationObj.add_warning('Twitter does not support Reels. This post will be published as a normal tweet.');
 
   return validationObj;
 }
@@ -163,7 +165,7 @@ function validate_twitter (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateTwitterBody(post.body, Boolean(post.media && post.media.length)),
+    body: validateTwitterBody(post.body, post.post_content_type, Boolean(post.media && post.media.length)),
     link: validateUrl(post.link_url),
     media: validateTwitterMedia(post.media),
     link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, post.platform),

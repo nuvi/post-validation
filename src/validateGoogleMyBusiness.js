@@ -26,12 +26,14 @@ const SUPPORTED_IMAGE_EXTENSIONS = [
   '.png',
 ];
 
-function validateGMBBody (body) {
+function validateGMBBody (body, postContentType) {
   const maxCharacters = 1500;
   const validationObj = new ValidationObj();
 
   if (!body || typeof body !== 'string') validationObj.errors.push({ message: 'GMB requires a summary for every post' });
   if (body.length > maxCharacters) validationObj.errors.push({ message: 'Summary is too long' });
+
+  if (postContentType === 'reel') validationObj.add_warning('GMB does not support Reels. This post will be published as a normal post.');
 
   return validationObj;
 }
@@ -122,7 +124,7 @@ function validate_google_my_business (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateGMBBody(post.body),
+    body: validateGMBBody(post.body, post.post_content_type),
     details: validateGMBDetails(post.details),
     media: validateGMBMedia(post.media),
   };

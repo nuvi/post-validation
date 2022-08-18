@@ -53,7 +53,7 @@ function validateInstagramBody (body) {
   return validationObj;
 }
 
-function validateInstagramMetadata (metadata) {
+function validateInstagramMetadata (metadata, postContentType) {
   const validationObj = new ValidationObj();
 
   const { extension, size, duration } = metadata;
@@ -64,6 +64,7 @@ function validateInstagramMetadata (metadata) {
   const audio = streamsObj.audio || {};
   let aspectRatio = width / height;
   if (SUPPORTED_IMAGE_EXTENSIONS.includes(extension)) {
+    if (postContentType === 'reel') validationObj.add_error('Images are not supported by reels');
     if (aspectRatio < 0.8 || aspectRatio > 1.91) {
       validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
     }
@@ -78,10 +79,17 @@ function validateInstagramMetadata (metadata) {
       if (get(audio, 'channels') > MAX_AUDIO_CHANNELS) validationObj.add_error('Audio must have either 1 or 2 channels.');
     }
     if (nb_frames / duration > 60 || nb_frames / duration < 23) validationObj.add_error('Video framerate must be between 23 and 60.');
-    if (aspectRatio < 4 / 5 || aspectRatio > 16 / 9) validationObj.add_error('Video must have an aspect ratio between 4:5 and 16:9.');
+    if (postContentType !== 'reel' && (aspectRatio < 4 / 5 || aspectRatio > 16 / 9)) validationObj.add_error('Video must have an aspect ratio between 4:5 and 16:9.');
     if (width > 1920) validationObj.add_warning('Video width should be less than 1920 pixels.');
     if (duration < 3) validationObj.add_error('Video must be a minimum duration of 3 seconds.');
-    if (duration > 60) validationObj.add_error('Videa must be a maximum duration of 60 seconds.');
+    if (duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds.');
+    if (postContentType === 'reel') {
+      if (aspectRatio < 0.01 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.01:1 and 10:1.');
+      if (aspectRatio !== 9 / 16) validationObj.add_warning('The recommended aspect ratio is 9:16. Only videos with this aspect ratio will appear in Instagram\'s "Reels" tab.');
+      if (duration > 60 * 15) validationObj.add_error('Video duration must not exceed 15 minutes for Reels content.');
+      if (duration > 90) validationObj.add_warning('Videos longer than 90 seconds will not appear in Instagram\'s "Reels" tab.');
+      if (duration < 5) validationObj.add_warning('Videos shorter than 5 seconds will not appear in Instagram\'s "Reels" tab.');
+    }
     if (size > MAX_VIDEO_SIZE) validationObj.add_error('Video file size must not exceed 100MB.');
   } else {
     validationObj.add_error(`Unsupported file type. Must be one of ${SUPPORTED_IMAGE_EXTENSIONS.join(', ')}`);
@@ -94,10 +102,11 @@ function validateInstagramMetadata (metadata) {
   return validationObj;
 }
 
-function validateInstagramMedia (media) {
+function validateInstagramMedia (media, postContentType) {
   const all = new ValidationObj();
 
   if (!media || media.length === 0) all.add_error('Must include at least 1 image/video to automatically post to Instagram.');
+  if (postContentType === 'reel' && media.length > 1) all.add_error('Maximum of 1 video to post as an Instagram Reel');
   if (media.length > 10) all.add_error('Maximum of 10 images/videos to automatically post to Instagram');
 
   const response = { all };
@@ -109,7 +118,7 @@ function validateInstagramMedia (media) {
     }
 
     for (const instance of media) {
-      response[instance.id] = validateInstagramMetadata(instance.metadata);
+      response[instance.id] = validateInstagramMetadata(instance.metadata, postContentType);
     }
   }
 
@@ -121,7 +130,7 @@ function validate_instagram (post, integration) {
     integration: integration.id,
     platform: integration.platform,
     body: validateInstagramBody(post.body),
-    media: validateInstagramMedia(post.media),
+    media: validateInstagramMedia(post.media, post.post_content_type),
   };
 }
 
