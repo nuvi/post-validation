@@ -85,10 +85,10 @@ function validateInstagramMetadata (metadata, postContentType) {
     if (duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds.');
     if (postContentType === 'reel') {
       if (aspectRatio < 0.01 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.01:1 and 10:1.');
-      if (aspectRatio !== 9 / 16) validationObj.add_warning('The recommended aspect ratio is 9:16. Only videos with this aspect ratio will appear in Instagram\'s "Reels" tab.');
+      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
       if (duration > 60 * 15) validationObj.add_error('Video duration must not exceed 15 minutes for Reels content.');
-      if (duration > 90) validationObj.add_warning('Videos longer than 90 seconds will not appear in Instagram\'s "Reels" tab.');
-      if (duration < 5) validationObj.add_warning('Videos shorter than 5 seconds will not appear in Instagram\'s "Reels" tab.');
+      if (duration > 90) validationObj.add_warning('A video duration less than 90 seconds is recommended to reach the largest audience.');
+      if (duration < 5) validationObj.add_warning('A video duration greater than 5 seconds is recommended to reach the largest audience.');
     }
     if (size > MAX_VIDEO_SIZE) validationObj.add_error('Video file size must not exceed 100MB.');
   } else {
