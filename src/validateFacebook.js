@@ -6,14 +6,12 @@ const validateUrl = require('./validateUrl');
 const validateLinkImage = require('./validateLinkImage');
 const crossStreams = require('./crossStreams');
 
-function validateFacebookBody (body, postContentType, hasMedia = false) {
+function validateFacebookBody (body, hasMedia = false) {
   const maxCharacters = 63206;
   const validationObj = new ValidationObj();
 
   if (!hasMedia && (!body || typeof body !== 'string' || !body.length)) validationObj.add_error('Must have a body');
   if (body.length > maxCharacters) validationObj.add_error('too long');
-
-  if (postContentType === 'reel') validationObj.add_warning('Facebook does not support Reels. This post will be published as a normal post.');
 
   return validationObj;
 }
@@ -75,7 +73,7 @@ const FACEBOOK_MAX_VIDEO_DIMENSIONS = {
 // video (future use): https://developers.facebook.com/docs/graph-api/video-uploads
 // video (in use): https://developers.facebook.com/docs/graph-api/reference/page/videos
 // image: https://developers.facebook.com/docs/graph-api/photo-uploads
-function validateFacebookMetadata (metadata) {
+function validateFacebookMetadata (metadata, postContentType) {
   const validationObj = new ValidationObj();
 
   const { extension, size, duration } = metadata;
@@ -89,27 +87,38 @@ function validateFacebookMetadata (metadata) {
       validationObj.add_warning('PNG files should be less than 1MB when published to Facebook. PNG files larger than 1 MB may appear pixelated after upload.');
     }
   } else if (FACEBOOK_VIDEO_EXTENSIONS.includes(extension)) {
+    const { nb_frames, width, height } = streamsObj.video || {};
     const lowerAspectRatio = 9 / 16;
     const upperAspectRatio = 16 / 9;
-    const aspectRatioArr = get(streamsObj, 'video.display_aspect_ratio', '').split(':');
-    const aspectRatio = aspectRatioArr[0] / aspectRatioArr[1];
+    const aspectRatio = width / height;
+    const frameRate = nb_frames / duration;
 
-    if (size < 1024) validationObj.add_error('File size must exceed 1 KB');
-    if (duration < 1) validationObj.add_error('Duration must be longer than 1 second');
-    if (get(streamsObj, 'video.height', 0) > FACEBOOK_MAX_VIDEO_DIMENSIONS.height) {
-      validationObj.add_warning("Videos with a resolution greater then 1080p will be resized to meet Facebook's video requirements.");
+    if (postContentType === 'reel') {
+      if (duration < 4) validationObj.add_error('Reel duration must be at least 4 seconds.');
+      if (duration > 60) validationObj.add_error('Reel duration must be less than or equal to 1 minute.');
+      if (frameRate < 23) validationObj.add_error('Frame rate must be at least 23fps.');
+      if (aspectRatio !== lowerAspectRatio) validationObj.add_error('Reel aspect ratio must be 9:16.');
+      if (width < 540) validationObj.add_error('Video width must be at least 540 pixels');
+      if (height < 960) validationObj.add_error('Video height must be at least 960 pixels');
+    } else {
+      if (duration < 1) validationObj.add_error('Duration must be longer than 1 second.');
+      if (duration > 20 * 60) validationObj.add_error('Duration must be equal to or less than 20 minutes.');
+      if (aspectRatio < lowerAspectRatio || aspectRatio > upperAspectRatio) validationObj.add_error('Aspect ratio must be between 9:16 and 16:9.');
     }
-    if (size > 1000000000) validationObj.add_error('File size must not exceed 1 GB');
-    if (duration > 20 * 60) validationObj.add_error('Duration must be equal to or less than 20 minutes');
-    if (aspectRatio < lowerAspectRatio || aspectRatio > upperAspectRatio) validationObj.add_error('Aspect ratio must be between 9:16 and 16:9');
+
+    if (size < 1024) validationObj.add_error('File size must exceed 1 KB.');
+    if (get(streamsObj, 'video.height', 0) > FACEBOOK_MAX_VIDEO_DIMENSIONS.height) {
+      validationObj.add_warning("Videos with a resolution greater than 1080p will be resized to meet Facebook's video requirements.");
+    }
+    if (size > 1000000000) validationObj.add_error('File size must not exceed 1 GB.');
   } else {
-    validationObj.add_error('Unsupported file type');
+    validationObj.add_error('Unsupported file type.');
   }
 
   return validationObj;
 }
 
-function validateFacebookMedia (media) {
+function validateFacebookMedia (media, postContentType) {
   const all = new ValidationObj();
   const response = { all };
   if (media) {
@@ -121,11 +130,13 @@ function validateFacebookMedia (media) {
     const img_count = media.filter(instance => FACEBOOK_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
     const video_count = media.filter(instance => FACEBOOK_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
     // if(img_count > 4) all.add_error('Only 4 images can be attached to a facebook post at this time.');
+    if (postContentType === 'reel' && img_count) all.add_error('Images cannot be used as Reels content.');
+    if (postContentType === 'reel' && !video_count) all.add_error('Reels must include one video');
     if (video_count > 1) all.add_error('Only 1 video can be attached to a facebook post at this time.');
     const media_type_count = [img_count, video_count].filter(count => count > 0).length;
     if (media_type_count > 1) all.add_error('Only 1 type of media (image, video) can be attached to a facebook post at this time.');
     for (const instance of media) {
-      response[instance.id] = validateFacebookMetadata(instance.metadata);
+      response[instance.id] = validateFacebookMetadata(instance.metadata, postContentType);
     }
   }
   return response;
@@ -135,8 +146,8 @@ function validate_facebook (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateFacebookBody(post.body, post.post_content_type, Boolean(post.media && post.media.length)),
-    media: validateFacebookMedia(post.media),
+    body: validateFacebookBody(post.body, Boolean(post.media && post.media.length)),
+    media: validateFacebookMedia(post.media, post.post_content_type),
     link: validateUrl(post.link_url),
     link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, post.platform),
   };
