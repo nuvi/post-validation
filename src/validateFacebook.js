@@ -87,10 +87,15 @@ function validateFacebookMetadata (metadata, postContentType) {
       validationObj.add_warning('PNG files should be less than 1MB when published to Facebook. PNG files larger than 1 MB may appear pixelated after upload.');
     }
   } else if (FACEBOOK_VIDEO_EXTENSIONS.includes(extension)) {
-    const { nb_frames, width, height } = streamsObj.video || {};
+    const {
+      height,
+      nb_frames,
+      rotation,
+      width,
+    } = streamsObj.video || {};
     const lowerAspectRatio = 9 / 16;
     const upperAspectRatio = 16 / 9;
-    const aspectRatio = width / height;
+    const aspectRatio = [90, 270].includes(rotation) ? height / width : width / height;
     const frameRate = nb_frames / duration;
 
     if (postContentType === 'reel') {
