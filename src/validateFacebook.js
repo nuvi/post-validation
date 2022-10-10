@@ -95,7 +95,7 @@ function validateFacebookMetadata (metadata, postContentType) {
     } = streamsObj.video || {};
     const lowerAspectRatio = 9 / 16;
     const upperAspectRatio = 16 / 9;
-    const aspectRatio = [90, 270].includes(rotation) ? height / width : width / height;
+    const aspectRatio = [-279, -90, 90, 270].includes(rotation) ? height / width : width / height;
     const frameRate = nb_frames / duration;
 
     if (postContentType === 'reel') {
