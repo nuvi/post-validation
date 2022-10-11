@@ -96,6 +96,8 @@ function validateFacebookMetadata (metadata, postContentType) {
     const lowerAspectRatio = 9 / 16;
     const upperAspectRatio = 16 / 9;
     const aspectRatio = ['-270', -270, '-90', -90, '90', 90, '270', 270].includes(rotation) ? height / width : width / height;
+    const effectiveWidth = ['-270', -270, '-90', -90, '90', 90, '270', 270].includes(rotation) ? height : width;
+    const effectiveHeight = ['-270', -270, '-90', -90, '90', 90, '270', 270].includes(rotation) ? width : height;
     const frameRate = nb_frames / duration;
 
     if (postContentType === 'reel') {
@@ -103,8 +105,8 @@ function validateFacebookMetadata (metadata, postContentType) {
       if (duration > 60) validationObj.add_error('Reel duration must be less than or equal to 1 minute.');
       if (frameRate < 23) validationObj.add_error('Frame rate must be at least 23fps.');
       if (aspectRatio !== lowerAspectRatio) validationObj.add_error('Reel aspect ratio must be 9:16.');
-      if (width < 540) validationObj.add_error('Video width must be at least 540 pixels');
-      if (height < 960) validationObj.add_error('Video height must be at least 960 pixels');
+      if (effectiveWidth < 540) validationObj.add_error('Video width must be at least 540 pixels');
+      if (effectiveHeight < 960) validationObj.add_error('Video height must be at least 960 pixels');
     } else {
       if (duration < 1) validationObj.add_error('Duration must be longer than 1 second.');
       if (duration > 20 * 60) validationObj.add_error('Duration must be equal to or less than 20 minutes.');
