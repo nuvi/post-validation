@@ -46,9 +46,9 @@ function validateInstagramBody (body, replies = []) {
   if (replies.length > MAX_COMMENTS) validationObj.add_error(`Post must not contain more than ${MAX_COMMENTS} comments.`);
   if (body.length > MAX_CHARACTERS) validationObj.add_error(`Caption must be no more than ${MAX_CHARACTERS} characters.`);
 
-  replies.forEach((msg, index) => {
+  replies.forEach((reply, index) => {
     const commentNumber = `Comment #${index + 1}`;
-    if (msg.length > MAX_CHARACTERS) validationObj.add_error(`${commentNumber} must be no more than ${MAX_CHARACTERS} characters.`);
+    if (reply.body.length > MAX_CHARACTERS) validationObj.add_error(`${commentNumber} must be no more than ${MAX_CHARACTERS} characters.`);
   });
   return validationObj;
 }

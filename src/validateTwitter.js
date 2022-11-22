@@ -27,11 +27,11 @@ function validateTwitterBody (body, replies = [], postContentType, hasMedia = fa
 
   if (replies.length > 20) validationObj.add_warning('Having more than 20 replies Twitter may flag the account as spam');
 
-  replies.forEach((msg, index) => {
-    const parsedThread = parseTweet(msg);
+  replies.forEach((reply, index) => {
+    const parsedThread = parseTweet(reply.body);
 
     const tweetNumber = `reply #${index + 1}`;
-    if (parsedThread.permillage > 1000) validationObj.add_error(`Message too long in ${tweetNumber}`, 1001, msg.length);
+    if (parsedThread.permillage > 1000) validationObj.add_error(`Message too long in ${tweetNumber}`, 1001, reply.body.length);
     else if (!parsedThread.valid) validationObj.add_error(`Invalid post body in ${tweetNumber}`);
   });
 
