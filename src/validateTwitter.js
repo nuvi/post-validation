@@ -11,7 +11,7 @@ const crossStreams = require('./crossStreams');
 
 // TODO: check if they text they are wanting to send is the same as the text in their last tweet
 
-function validateTwitterBody (body, replies, postContentType, hasMedia = false) {
+function validateTwitterBody (body, replies = [], postContentType, hasMedia = false) {
   const parsedTweet = parseTweet(body);
 
   const validationObj = new ValidationObj();

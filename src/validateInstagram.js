@@ -35,7 +35,7 @@ const MAX_CHARACTERS = 1600;
 const MAX_COMMENTS = 6;
 const MAX_HASHTAGS = 30;
 
-function validateInstagramBody (body, replies) {
+function validateInstagramBody (body, replies = []) {
   const validationObj = new ValidationObj();
 
   const hashtags = [body, ...replies.map(reply => reply.body)].join(' ').match(/#(\w+)/g);
