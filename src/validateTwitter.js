@@ -8,11 +8,10 @@ const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
 const validateLinkImage = require('./validateLinkImage');
 const crossStreams = require('./crossStreams');
-const { threadRegex } = require('./regex');
 
 // TODO: check if they text they are wanting to send is the same as the text in their last tweet
 
-function validateTwitterBody (body, postContentType, hasMedia = false) {
+function validateTwitterBody (body, replies = [], postContentType, hasMedia = false) {
   const parsedTweet = parseTweet(body);
 
   const validationObj = new ValidationObj();
@@ -22,20 +21,23 @@ function validateTwitterBody (body, postContentType, hasMedia = false) {
     if (!hasMedia) validationObj.add_error('Must have a body');
   }
 
-  const bodies = body.split(threadRegex);
+  if (parsedTweet.permillage > 1000) validationObj.add_error('Message too long in primary Tweet', 1001, body.length);
+  else if (!parsedTweet.valid && !hasMedia) validationObj.add_error('Invalid post body in primary Tweet');
 
-  if (bodies.length > 20) validationObj.add_warning('Having more than 20 replies Twitter may flag the account as spam');
 
-  bodies.forEach((msg, index) => {
-    const parsedThread = parseTweet(msg);
-    const tweetNumber = index !== 0 ? `reply #${index}` : 'primary Tweet';
-    if (parsedThread.permillage > 1000) validationObj.add_error(`Message too long in ${tweetNumber}`, 1001, msg.length);
-    else if (!parsedThread.valid && (!hasMedia || index !== 0)) validationObj.add_error(`Invalid post body in ${tweetNumber}`);
+  if (replies.length > 20) validationObj.add_warning('Having more than 20 replies Twitter may flag the account as spam');
+
+  replies.forEach((reply, index) => {
+    const parsedThread = parseTweet(reply.body);
+
+    const tweetNumber = `reply #${index + 1}`;
+    if (parsedThread.permillage > 1000) validationObj.add_error(`Message too long in ${tweetNumber}`, 1001, reply.body.length);
+    else if (!parsedThread.valid) validationObj.add_error(`Invalid post body in ${tweetNumber}`);
   });
 
   const invalidChars = /\uFFFE|\uFEFF|\uFFFF/gm;
   let result;
-  while ((result = invalidChars.exec(body))) { // eslint-disable-line no-cond-assign
+  while ((result = invalidChars.exec([body, ...replies.map((reply) => reply.body).join(' ')]))) { // eslint-disable-line no-cond-assign
     validationObj.add_error('Invalid character', result.index, result.index + result.length);
   }
 
@@ -165,7 +167,7 @@ function validate_twitter (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateTwitterBody(post.body, post.post_content_type, Boolean(post.media && post.media.length)),
+    body: validateTwitterBody(post.body, post.replies, post.post_content_type, Boolean(post.media && post.media.length)),
     link: validateUrl(post.link_url),
     media: validateTwitterMedia(post.media),
     link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, post.platform),

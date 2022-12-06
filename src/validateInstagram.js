@@ -4,7 +4,6 @@ const isObject = require('lodash/isObject');
 
 const ValidationObj = require('./ValidationObj');
 const crossStreams = require('./crossStreams');
-const { threadRegex } = require('./regex');
 
 const SUPPORTED_IMAGE_EXTENSIONS = [
   '.jpeg',
@@ -36,19 +35,20 @@ const MAX_CHARACTERS = 1600;
 const MAX_COMMENTS = 6;
 const MAX_HASHTAGS = 30;
 
-function validateInstagramBody (body) {
+function validateInstagramBody (body, replies = []) {
   const validationObj = new ValidationObj();
-  const bodies = body.split(threadRegex);
 
-  const hashtags = body.match(/#(\w+)/g);
+  const hashtags = [body, ...replies.map(reply => reply.body)].join(' ').match(/#(\w+)/g);
   if (hashtags && hashtags.length > MAX_HASHTAGS) {
     validationObj.add_error(`Post must not contain more than ${MAX_HASHTAGS} hashtags.`);
   }
 
-  if (bodies.length - 1 > MAX_COMMENTS) validationObj.add_error(`Post must not contain more than ${MAX_COMMENTS} comments.`);
-  bodies.forEach((msg, index) => {
-    const commentNumber = index !== 0 ? `Comment #${index}` : 'Caption';
-    if (msg.length > MAX_CHARACTERS) validationObj.add_error(`${commentNumber} must be no more than ${MAX_CHARACTERS} characters.`);
+  if (replies.length > MAX_COMMENTS) validationObj.add_error(`Post must not contain more than ${MAX_COMMENTS} comments.`);
+  if (body.length > MAX_CHARACTERS) validationObj.add_error(`Caption must be no more than ${MAX_CHARACTERS} characters.`);
+
+  replies.forEach((reply, index) => {
+    const commentNumber = `Comment #${index + 1}`;
+    if (reply.body.length > MAX_CHARACTERS) validationObj.add_error(`${commentNumber} must be no more than ${MAX_CHARACTERS} characters.`);
   });
   return validationObj;
 }
@@ -129,7 +129,7 @@ function validate_instagram (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateInstagramBody(post.body),
+    body: validateInstagramBody(post.body, post.replies),
     media: validateInstagramMedia(post.media, post.post_content_type),
   };
 }
