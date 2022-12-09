@@ -25,7 +25,7 @@ function validateTwitterBody (body, replies = [], postContentType, hasMedia = fa
   else if (!parsedTweet.valid && !hasMedia) validationObj.add_error('Invalid post body in primary Tweet');
 
 
-  if (replies.length > 20) validationObj.add_warning('Having more than 20 replies Twitter may flag the account as spam');
+  if (replies.length > 10) validationObj.add_warning('Having more than 10 replies Twitter may flag the account as spam');
 
   replies.forEach((reply, index) => {
     const parsedThread = parseTweet(reply.body);
