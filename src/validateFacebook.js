@@ -156,7 +156,7 @@ function validate_facebook (post, integration) {
     body: validateFacebookBody(post.body, Boolean(post.media && post.media.length)),
     media: validateFacebookMedia(post.media, post.post_content_type),
     link: validateUrl(post.link_url),
-    link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, post.platform),
+    link_image_url: validateLinkImage(post.link_image_url, post.is_link_preview_customized, integration.platform),
   };
 }
 
