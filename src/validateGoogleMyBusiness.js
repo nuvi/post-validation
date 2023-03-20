@@ -20,7 +20,7 @@ const GMB_CALLS_TO_ACTION_REQUIRING_URL = [
   'SIGN_UP',
 ];
 
-const SUPPORTED_IMAGE_EXTENSIONS = [
+const GMB_IMAGE_EXTENSIONS = [
   '.jpeg',
   '.jpg',
   '.png',
@@ -112,8 +112,8 @@ function validateGMBMedia (media) {
       return response;
     }
 
-    if (!SUPPORTED_IMAGE_EXTENSIONS.includes(media[0].metadata.extension)) {
-      all.add_error(`Unsupported file type. Must be one of ${SUPPORTED_IMAGE_EXTENSIONS.join(', ')}`);
+    if (!GMB_IMAGE_EXTENSIONS.includes(media[0].metadata.extension)) {
+      all.add_error(`Unsupported file type. Must be one of ${GMB_IMAGE_EXTENSIONS.join(', ')}`);
     }
   }
 
@@ -133,5 +133,6 @@ function validate_google_my_business (post, integration) {
 module.exports = {
   GMB_CALLS_TO_ACTION,
   GMB_CALLS_TO_ACTION_REQUIRING_URL,
+  GMB_IMAGE_EXTENSIONS,
   validate_google_my_business,
 };

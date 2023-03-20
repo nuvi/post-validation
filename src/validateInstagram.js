@@ -5,7 +5,7 @@ const isObject = require('lodash/isObject');
 const ValidationObj = require('./ValidationObj');
 const crossStreams = require('./crossStreams');
 
-const SUPPORTED_IMAGE_EXTENSIONS = [
+const INSTAGRAM_IMAGE_EXTENSIONS = [
   '.jpeg',
   '.jpg',
   '.png',
@@ -15,12 +15,12 @@ const INSTAGRAM_VIDEO_EXTENSIONS = [
   '.mp4',
 ];
 
-const SUPPORTED_VIDEO_CODECS = [
+const INSTAGRAM_VIDEO_CODECS = [
   'h264',
   'hevc',
 ];
 
-const SUPPORTED_AUDIO_CODECS = [
+const INSTAGRAM_AUDIO_CODECS = [
   'aac'
 ];
 
@@ -63,7 +63,7 @@ function validateInstagramMetadata (metadata, postContentType) {
   } = streamsObj.video || {};
   const audio = streamsObj.audio || {};
   let aspectRatio = width / height;
-  if (SUPPORTED_IMAGE_EXTENSIONS.includes(extension)) {
+  if (INSTAGRAM_IMAGE_EXTENSIONS.includes(extension)) {
     if (postContentType === 'reel') validationObj.add_error('Images are not supported by reels');
     if (aspectRatio < 0.8 || aspectRatio > 1.91) {
       validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
@@ -72,9 +72,9 @@ function validateInstagramMetadata (metadata, postContentType) {
   } else if (INSTAGRAM_VIDEO_EXTENSIONS.includes(extension)) {
     const rotation = get(streamsObj, 'video.rotation');
     if (rotation && (`${rotation}` === '-90' || `${rotation}` === '90')) aspectRatio = height / width;
-    if (!SUPPORTED_VIDEO_CODECS.includes(codec_name)) validationObj.add_error('Video codec must be either H.264 or HEVC.');
+    if (!INSTAGRAM_VIDEO_CODECS.includes(codec_name)) validationObj.add_error('Video codec must be either H.264 or HEVC.');
     if (!isEmpty(audio)) {
-      if (!SUPPORTED_AUDIO_CODECS.includes(get(audio, 'codec_name'))) validationObj.add_error('Audio codec must be AAC.');
+      if (!INSTAGRAM_AUDIO_CODECS.includes(get(audio, 'codec_name'))) validationObj.add_error('Audio codec must be AAC.');
       if (get(audio, 'sample_rate') > MAX_AUDIO_SAMPLE_RATE) validationObj.add_error('Audio sample rate must be less than or equal to 48khz.');
       if (get(audio, 'channels') > MAX_AUDIO_CHANNELS) validationObj.add_error('Audio must have either 1 or 2 channels.');
     }
@@ -92,7 +92,7 @@ function validateInstagramMetadata (metadata, postContentType) {
     }
     if (size > MAX_VIDEO_SIZE) validationObj.add_error('Video file size must not exceed 100MB.');
   } else {
-    validationObj.add_error(`Unsupported file type. Must be one of ${SUPPORTED_IMAGE_EXTENSIONS.join(', ')}`);
+    validationObj.add_error(`Unsupported file type. Must be one of ${INSTAGRAM_IMAGE_EXTENSIONS.join(', ')}`);
   }
 
   if (width < 320) {
@@ -136,5 +136,8 @@ function validate_instagram (post, integration) {
 
 module.exports = {
   validate_instagram,
+  INSTAGRAM_IMAGE_EXTENSIONS,
   INSTAGRAM_VIDEO_EXTENSIONS,
+  INSTAGRAM_VIDEO_CODECS,
+  INSTAGRAM_AUDIO_CODECS,
 };
