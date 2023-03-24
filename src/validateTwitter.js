@@ -1,8 +1,5 @@
-const isFunction = require('lodash/isFunction');
 const isObject = require('lodash/isObject');
 const twttr = require('@ambassify/twitter-text');
-
-if (!isFunction(twttr.parseTweet)) throw new Error('Error importing from twitter-text: parseTweet is not a function!');
 
 const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
