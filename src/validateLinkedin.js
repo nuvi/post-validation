@@ -88,7 +88,7 @@ function validateLinkedinMetadata (metadata) {
   return validationObj;
 }
 
-function validateLinkedinMedia (media, link_url) {
+function validateLinkedinMedia (media) {
   const all = new ValidationObj();
   const response = { all };
 
@@ -98,7 +98,6 @@ function validateLinkedinMedia (media, link_url) {
       return response;
     }
 
-    const article_count = link_url ? 1 : 0;
     const img_count = media.filter(instance => LINKEDIN_IMAGE_EXTENSIONS.includes(instance.metadata.extension)).length;
     const video_count = media.filter(instance => LINKEDIN_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
 
@@ -106,8 +105,9 @@ function validateLinkedinMedia (media, link_url) {
 
     if (img_count > 9) all.add_error('Only up to 9 images can be attached to a LinkedIn post at this time.');
 
-    const media_type_count = [article_count, img_count, video_count].filter(count => count > 0).length;
-    if (media_type_count > 1) all.add_error('Only 1 type of media (link, image, video) can be attached to a LinkedIn post at this time.');
+    if (img_count && video_count) {
+      all.add_error('Only 1 type of media (image, video) can be attached to a LinkedIn post at this time.');
+    }
 
     for (const instance of media) {
       response[instance.id] = validateLinkedinMetadata(instance.metadata);
@@ -122,7 +122,7 @@ function validate_linkedin (post, integration) {
     integration: integration.id,
     platform: integration.platform,
     body: validateLinkedinBody(post.body, post.media, post.post_content_type),
-    media: validateLinkedinMedia(post.media, post.link_url),
+    media: validateLinkedinMedia(post.media),
     link: validateUrl(post.link_url),
     link_caption: validateLinkedinLinkCaption(post.link_caption),
     link_title: validateLinkedinLinkTitle(post.link_title),
