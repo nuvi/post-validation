@@ -11,7 +11,7 @@ module.exports = function getErrorResolution (platform, message) {
   if (!message) {
     return GENERIC_RESOLUTION;
   }
- 
+
   switch (platform) {
     case 'twitter': return getTwitterResolution(message);
     case 'facebook': return getFacebookResolution(message);
