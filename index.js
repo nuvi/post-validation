@@ -1,3 +1,4 @@
+const getErrorResolution = require('./src/getErrorResolution');
 const validate_post = require('./src/schema/validate_post');
 const validate_all = require('./src/validate_all');
 const {
@@ -102,4 +103,5 @@ module.exports = {
   YOUTUBE_PREFERRED_RESOLUTIONS,
   threadRegex,
   ValidationObj,
+  getErrorResolution,
 };
