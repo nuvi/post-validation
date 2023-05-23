@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "npx eslint ./",
     "lint:dev": "npx eslint --fix ./",
-    "test": "npm run lint && npm run unimported",
+    "jest": "./node_modules/jest/bin/jest.js --useStderr",
+    "test": "npm run lint && npm run unimported && npm run jest",
     "unimported": "npx unimported"
   },
   "repository": {
@@ -26,6 +27,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-lodash": "^7.2.0",
     "eslint-plugin-promise": "^5.1.0",
+    "jest": "^26.6.3",
     "unimported": "^1.7.0"
   }
 }
