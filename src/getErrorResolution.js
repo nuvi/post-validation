@@ -8,6 +8,10 @@ const getTikTokResolution = require('./errorResolution/getTikTokResolution');
 const GENERIC_RESOLUTION = 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
 
 module.exports = function getErrorResolution (platform, message) {
+  if (!message) {
+    return GENERIC_RESOLUTION;
+  }
+ 
   switch (platform) {
     case 'twitter': return getTwitterResolution(message);
     case 'facebook': return getFacebookResolution(message);
