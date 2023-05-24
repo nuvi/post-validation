@@ -1,5 +1,5 @@
 const isObject = require('lodash/isObject');
-const twttr = require('@ambassify/twitter-text');
+const twttr = require('twitter-text');
 
 const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');

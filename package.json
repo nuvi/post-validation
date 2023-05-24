@@ -18,8 +18,8 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@ambassify/twitter-text": "^3.1.0",
-    "ajv": "^6.12.6"
+    "ajv": "^6.12.6",
+    "twitter-text": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^5.10.0",
