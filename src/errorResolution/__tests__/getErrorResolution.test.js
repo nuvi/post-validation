@@ -147,7 +147,7 @@ describe('getErrorResolution', () => {
 
   it('should handle Twitter spam errors', () => {
     const input = 'StatusCodeError: 403 - {"errors":[{"code":326,"message":"To protect our users from spam and other malicious activity, this account is temporarily locked. Please log in to https://twitter.com to unlock your account."}]}';
-    const expected = 'Twitter has locked your account. This typically means that the account published too many tweets to quickly or too many tweets with the same content. Regardless of the reason, you\'ll need to log in to twitter.com and follow the verification prompts to unlock your account before you can publish again.';
+    const expected = 'Twitter has locked your account. This typically means that the account published too many tweets too quickly or too many tweets with the same content. Regardless of the reason, you\'ll need to log in to twitter.com and follow the verification prompts to unlock your account before you can publish again.';
     expect(getErrorResolution('twitter', input)).toEqual(expected);
   });
 
