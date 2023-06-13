@@ -18,6 +18,36 @@ module.exports = function getFacebookResolution (message) {
     return `The Facebook User who authorized this Page has changed in some way that caused their authorization to publish to be revoked by Facebook. Common reasons for this include the user changing their password or an administrator making changes to permissions in Business Manager. To resolve this issue, have an administrator log in to Facebook Business Manager and verify that each User has the appropriate access to create content for your Pages. Then have the Users reauthorize Reputation.
     It is also possible that some permissions were not accepted during the authorization process or that some permissions were revoked by a User. To resolve this situation, have each User completely revoke access to Reputation through their Facebook Settings. Then have them reauthorize their account.`;
   }
+  if (message.includes('You do not have permission to create an unpublished post')) {
+    return `
+      This can be a result of being added as an admin via business manager to a page created via the business manager of Facebook.<br />
+      To prevent this issue, you will have to reassign your role from the regular page.<br />
+      <br />
+      1) Remove yourself as an admin from the Business Manager<br />
+      2) You need to add the user as an admin on your selected Facebook Page (ensuring that you are not within the Business Manager Framework).<br />
+      <br />
+      Then<br />
+      (new Facebook experience)<br />
+      1) Go to the Facebook Page and click  Page Settings on the bottom left (DO NOT USE BUSINESS MANAGER).<br />
+      2) Click Page Roles in the left column.<br />
+      3) Type a name in the box and select the person from the list that appears.<br />
+      4) Click "Admin"* to select a role from the dropdown menu.<br />
+      5) Click Add and enter your password to confirm.<br />
+      <br />
+      (classic Facebook experience)<br />
+      1) Click Settings at the top of your Page (DO NOT USE BUSINESS MANAGER).<br />
+      2) Click Page Roles in the left column.<br />
+      3) Type a name in the box and select the person from the list that appears.<br />
+      4) Click "Admin"  to select a role from the dropdown menu.<br />
+      5) Click Add and enter the password to confirm.<br />
+      <br />
+      *Please note, if the "Admin" does not appear, select "Editor", this can be changed later.
+   `;
+  }
+
+  if (message.includes('Your photos couldn\'t be uploaded. Photos should be less than 4 MB and saved as JPG, PNG, GIF, TIFF, HEIF or WebP files')) {
+    return 'Typically, our process automatically resizes and formats images to avoid this error. You may duplicate the post and reschedule and the images should be handled correctly. If the issue persists please contact customer support.';
+  }
 
   return 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
 };
