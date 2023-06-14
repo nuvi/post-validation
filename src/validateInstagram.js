@@ -64,10 +64,13 @@ function validateInstagramMetadata (metadata, postContentType) {
   const audio = streamsObj.audio || {};
   let aspectRatio = width / height;
   if (INSTAGRAM_IMAGE_EXTENSIONS.includes(extension)) {
-    if (postContentType === 'reel') validationObj.add_error('Images are not supported by reels');
-    if (aspectRatio < 0.8 || aspectRatio > 1.91) {
-      validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
+    if (postContentType === 'reel') {
+      validationObj.add_error('Images are not supported by reels.');
+    } else if (postContentType === 'story') {
+      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
     }
+
+    if (aspectRatio < 0.8 || aspectRatio > 1.91) validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
     if (size > MAX_IMAGE_SIZE) validationObj.add_error('Image file size must not exceed 8 MB.');
   } else if (INSTAGRAM_VIDEO_EXTENSIONS.includes(extension)) {
     const rotation = get(streamsObj, 'video.rotation');
@@ -83,16 +86,23 @@ function validateInstagramMetadata (metadata, postContentType) {
     if (width > 1920) validationObj.add_warning('Video width should be less than 1920 pixels.');
     if (duration < 3) validationObj.add_error('Video must be a minimum duration of 3 seconds.');
     if (postContentType !== 'reel' && duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds.');
+
     if (postContentType === 'reel') {
       if (aspectRatio < 0.01 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.01:1 and 10:1.');
       if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
       if (duration > 60 * 15) validationObj.add_error('Video duration must not exceed 15 minutes for Reels content.');
       if (duration > 90) validationObj.add_warning('A video duration less than 90 seconds is recommended to reach the largest audience.');
       if (duration < 5) validationObj.add_warning('A video duration greater than 5 seconds is recommended to reach the largest audience.');
+    } else if (postContentType === 'story') {
+      if (aspectRatio < 0.1 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.1:1 and 10:1.');
+      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
+      if (duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds for Stories content.');
+      if (duration < 3) validationObj.add_error('Video duration must exceed 3 seconds for Stories content');
     }
+
     if (size > MAX_VIDEO_SIZE) validationObj.add_error('Video file size must not exceed 100MB.');
   } else {
-    validationObj.add_error(`Unsupported file type. Must be one of ${INSTAGRAM_IMAGE_EXTENSIONS.join(', ')}`);
+    validationObj.add_error(`Unsupported file type. Must be one of: ${INSTAGRAM_IMAGE_EXTENSIONS.join(', ')}, ${INSTAGRAM_VIDEO_EXTENSIONS.join(', ')}`);
   }
 
   if (width < 320) {
