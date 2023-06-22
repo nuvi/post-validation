@@ -18,6 +18,9 @@ module.exports = function getFacebookResolution (message) {
     return `The Facebook User who authorized this Page has changed in some way that caused their authorization to publish to be revoked by Facebook. Common reasons for this include the user changing their password or an administrator making changes to permissions in Business Manager. To resolve this issue, have an administrator log in to Facebook Business Manager and verify that each User has the appropriate access to create content for your Pages. Then have the Users reauthorize Reputation.
     It is also possible that some permissions were not accepted during the authorization process or that some permissions were revoked by a User. To resolve this situation, have each User completely revoke access to Reputation through their Facebook Settings. Then have them reauthorize their account.`;
   }
+  if (message.includes('The user has not authorized application')) {
+    return 'This error means that either the authorization with this app expired or the app was removed from this Facebook account by a managing user on Facebook. You\'ll need to reauthorize your Facebook page before you can continue to publish.';
+  }
   if (message.includes('You do not have permission to create an unpublished post')) {
     return `
       This can be a result of being added as an admin via business manager to a page created via the business manager of Facebook.<br />
