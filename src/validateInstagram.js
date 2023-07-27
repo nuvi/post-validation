@@ -68,9 +68,9 @@ function validateInstagramMetadata (metadata, postContentType) {
       validationObj.add_error('Images are not supported by reels.');
     } else if (postContentType === 'story') {
       if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
+    } else if (aspectRatio < 0.8 || aspectRatio > 1.91) {
+      validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
     }
-
-    if (aspectRatio < 0.8 || aspectRatio > 1.91) validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
     if (size > MAX_IMAGE_SIZE) validationObj.add_error('Image file size must not exceed 8 MB.');
   } else if (INSTAGRAM_VIDEO_EXTENSIONS.includes(extension)) {
     const rotation = get(streamsObj, 'video.rotation');
