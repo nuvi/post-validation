@@ -1,5 +1,6 @@
 const isObject = require('lodash/isObject');
 const twttr = require('twitter-text');
+const parseTweet = twttr.default ? twttr.default.parseTweet : twttr.parseTweet;
 
 const ValidationObj = require('./ValidationObj');
 const validateUrl = require('./validateUrl');
@@ -9,7 +10,7 @@ const crossStreams = require('./crossStreams');
 // TODO: check if they text they are wanting to send is the same as the text in their last tweet
 
 function validateTwitterBody (body, replies = [], postContentType, hasMedia = false) {
-  const parsedTweet = twttr.txt.parseTweet(body);
+  const parsedTweet = parseTweet(body);
 
   const validationObj = new ValidationObj();
   validationObj.validationObj = parsedTweet.weightedLength;
@@ -25,7 +26,7 @@ function validateTwitterBody (body, replies = [], postContentType, hasMedia = fa
   if (replies.length > 10) validationObj.add_warning('Having more than 10 replies Twitter may flag the account as spam');
 
   replies.forEach((reply, index) => {
-    const parsedThread = twttr.txt.parseTweet(reply.body);
+    const parsedThread = parseTweet(reply.body);
 
     const tweetNumber = `reply #${index + 1}`;
     if (parsedThread.permillage > 1000) validationObj.add_error(`Message too long in ${tweetNumber}`, 1001, reply.body.length);
