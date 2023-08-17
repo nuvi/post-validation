@@ -9,7 +9,7 @@ const crossStreams = require('./crossStreams');
 // TODO: check if they text they are wanting to send is the same as the text in their last tweet
 
 function validateTwitterBody (body, replies = [], postContentType, hasMedia = false) {
-  const parsedTweet = twttr.parseTweet(body);
+  const parsedTweet = twttr.txt.parseTweet(body);
 
   const validationObj = new ValidationObj();
   validationObj.validationObj = parsedTweet.weightedLength;
@@ -25,7 +25,7 @@ function validateTwitterBody (body, replies = [], postContentType, hasMedia = fa
   if (replies.length > 10) validationObj.add_warning('Having more than 10 replies Twitter may flag the account as spam');
 
   replies.forEach((reply, index) => {
-    const parsedThread = twttr.parseTweet(reply.body);
+    const parsedThread = twttr.txt.parseTweet(reply.body);
 
     const tweetNumber = `reply #${index + 1}`;
     if (parsedThread.permillage > 1000) validationObj.add_error(`Message too long in ${tweetNumber}`, 1001, reply.body.length);
