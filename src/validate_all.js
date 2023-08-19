@@ -12,7 +12,7 @@ const { validate_google_my_business } = require('./validateGoogleMyBusiness');
 const validate_assistant = require('./validateAssistant');
 const { validate_tiktok } = require('./validateTikTok');
 
-module.exports = function validate_all (post, integration) {
+module.exports = function validate_all (post, integration, tikTokCreatorLimits) {
   if (integration.platform === FACEBOOK) return validate_facebook(post, integration);
   if (integration.platform === LINKEDIN) return validate_linkedin(post, integration);
   if (integration.platform === PINTEREST) return validate_pinterest(post, integration);
@@ -21,7 +21,7 @@ module.exports = function validate_all (post, integration) {
   if (integration.platform === INSTAGRAM) return validate_instagram(post, integration);
   if (integration.platform === GOOGLE_MY_BUSINESS) return validate_google_my_business(post, integration);
   if (integration.platform === ASSISTANT) return validate_assistant(post, integration);
-  if (integration.platform === TIKTOK) return validate_tiktok(post, integration);
+  if (integration.platform === TIKTOK) return validate_tiktok(post, integration, tikTokCreatorLimits);
 
   throw new Error('No implemented integration selected!');
 };
