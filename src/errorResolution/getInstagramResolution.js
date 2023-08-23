@@ -20,5 +20,8 @@ module.exports = function getInstagramResolution (message) {
   if (message.includes('Sessions for the user are not allowed because the user is not a confirmed user')) {
     return 'The Instagram User needs to log in to the Instagram mobile app and perform the required verification in order to be allowed to publish content.';
   }
+  if (message.includes('Error:')) {
+    return 'Facebook encountered an error. Please try again.';
+  }
   return 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
 };
