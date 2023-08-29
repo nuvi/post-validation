@@ -29,10 +29,10 @@ function validateTikTokMetadata (metadata, tikTokCreatorLimits) {
 
   if (TIKTOK_VIDEO_EXTENSIONS.includes(extension)) {
     if (size > 4000000000) validationObj.add_error('Video size must not exceed 4 GB');
-    if (duration > tikTokCreatorLimits.max_video_post_duration_sec) validationObj.add_error('Video duration must be 60 seconds or less');
+    if (duration > tikTokCreatorLimits.max_video_post_duration_sec) validationObj.add_error(`Video duration must be ${tikTokCreatorLimits.max_video_post_duration_sec} seconds or less`);
     if (duration < 3) validationObj.add_error('Video duration must be at least 3 seconds');
-    if (nb_frames / duration > 60 || nb_frames / duration < 23) validationObj.add_error('Video framerate must be between 23 and 60.');
-    if (!TIKTOK_VIDEO_CODECS.includes(codec_name)) validationObj.add_error('Video codec must be either H.264 or HEVC.');
+    if (nb_frames / duration > 60 || nb_frames / duration < 23) validationObj.add_error('Video framerate must be between 23 and 60');
+    if (!TIKTOK_VIDEO_CODECS.includes(codec_name)) validationObj.add_error('Video codec must be either H.264 or HEVC');
     if (width < 360) validationObj.add_error('Minimum width for video is 360px');
     if (height < 360) validationObj.add_error('Minimum height for video is 360px');
     if (width > 4096) validationObj.add_error('Maximum width for video is 4096px');
@@ -54,8 +54,8 @@ function validateTikTokMedia (media, tikTokCreatorLimits = { max_video_post_dura
     }
 
     const video_count = media.filter(instance => TIKTOK_VIDEO_EXTENSIONS.includes(instance.metadata.extension)).length;
-    if (!video_count) all.add_error(`Must include one video in one of the following formats: ${TIKTOK_VIDEO_EXTENSIONS.join(', ')}.`);
-    if (video_count > 1) all.add_error('Only 1 video can be uploaded to TikTok at a time.');
+    if (!video_count) all.add_error(`Must include one video in one of the following formats: ${TIKTOK_VIDEO_EXTENSIONS.join(', ')}`);
+    if (video_count > 1) all.add_error('Only 1 video can be uploaded to TikTok at a time');
 
     for (const instance of media) {
       response[instance.id] = validateTikTokMetadata(instance.metadata, tikTokCreatorLimits);
@@ -73,7 +73,7 @@ function validateTikTokSettings (post, tikTokCreatorLimits) {
   if (!post.privacy) {
     validationObj.add_error('A privacy setting must be selected.');
   } else if (!tikTokCreatorLimits.privacy_level_options.includes(post.privacy)) {
-    validationObj.add_error(`The privacy setting ${post.privacy} is not allowed for the account "${tikTokCreatorLimits.creator_nickname}".`);
+    validationObj.add_error(`The privacy setting ${post.privacy} is not allowed for the account ${tikTokCreatorLimits.creator_nickname}`);
   }
   return validationObj;
 }
