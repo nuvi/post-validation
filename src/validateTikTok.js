@@ -44,7 +44,7 @@ function validateTikTokMetadata (metadata, tikTokCreatorLimits) {
   return validationObj;
 }
 
-function validateTikTokMedia (media, tikTokCreatorLimits) {
+function validateTikTokMedia (media, tikTokCreatorLimits = { max_video_post_duration_sec: 600 }) {
   const all = new ValidationObj();
   const response = { all };
   if (media) {
@@ -64,10 +64,16 @@ function validateTikTokMedia (media, tikTokCreatorLimits) {
   return response;
 }
 
-function validateTikTokSettings (post) {
+function validateTikTokSettings (post, tikTokCreatorLimits) {
   const validationObj = new ValidationObj();
+  if (!tikTokCreatorLimits) {
+    validationObj.add_warning('TikTok Creator Limits are unavailable and may vary for each account. We are unable to guarantee successful publication.');
+    return validationObj;
+  }
   if (!post.privacy) {
-    validationObj.add_error('Privacy setting is required.');
+    validationObj.add_error('A privacy setting must be selected.');
+  } else if (!tikTokCreatorLimits.privacy_level_options.includes(post.privacy)) {
+    validationObj.add_error(`The privacy setting ${post.privacy} is not allowed for the account "${tikTokCreatorLimits.creator_nickname}".`);
   }
   return validationObj;
 }
@@ -78,7 +84,7 @@ function validate_tiktok (post, integration, tikTokCreatorLimits) {
     platform: integration.platform,
     body: validateTikTokBody(post.body),
     media: validateTikTokMedia(post.media, tikTokCreatorLimits),
-    tiktok_settings: validateTikTokSettings(post),
+    tiktok_settings: validateTikTokSettings(post, tikTokCreatorLimits),
   };
   return validation;
 }
