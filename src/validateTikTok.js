@@ -66,13 +66,13 @@ function validateTikTokMedia (media, tikTokCreatorLimits = { max_video_post_dura
 
 function validateTikTokSettings (post, tikTokCreatorLimits) {
   const validationObj = new ValidationObj();
-  if (!post.privacy || !post.privacy.tiktok) {
+  if (!post.privacy) {
     validationObj.add_error('A privacy setting must be selected.');
   } else if (!tikTokCreatorLimits) {
     validationObj.add_warning('TikTok Creator Limits are unavailable and may vary for each account. We are unable to guarantee successful publication.');
     return validationObj;
-  } else if (!tikTokCreatorLimits.privacy_level_options.includes(post.privacy.tiktok)) {
-    validationObj.add_error(`The privacy setting ${post.privacy.tiktok} is not allowed for the account ${tikTokCreatorLimits.creator_nickname}`);
+  } else if (!tikTokCreatorLimits.privacy_level_options.includes(post.privacy)) {
+    validationObj.add_error(`The privacy setting ${post.privacy} is not allowed for the account ${tikTokCreatorLimits.creator_nickname}`);
   }
   return validationObj;
 }
