@@ -53,6 +53,7 @@ function validateInstagramBody (body, replies = []) {
   return validationObj;
 }
 
+// https://developers.facebook.com/docs/instagram-api/reference/ig-user/media
 function validateInstagramMetadata (metadata, postContentType) {
   const validationObj = new ValidationObj();
 
