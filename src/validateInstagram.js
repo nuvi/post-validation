@@ -53,6 +53,7 @@ function validateInstagramBody (body, replies = []) {
   return validationObj;
 }
 
+// https://developers.facebook.com/docs/instagram-api/reference/ig-user/media
 function validateInstagramMetadata (metadata, postContentType) {
   const validationObj = new ValidationObj();
 
@@ -66,8 +67,6 @@ function validateInstagramMetadata (metadata, postContentType) {
   if (INSTAGRAM_IMAGE_EXTENSIONS.includes(extension)) {
     if (postContentType === 'reel') {
       validationObj.add_error('Images are not supported by reels.');
-    } else if (postContentType === 'story') {
-      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
     } else if (aspectRatio < 0.8 || aspectRatio > 1.91) {
       validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
     }
@@ -82,10 +81,7 @@ function validateInstagramMetadata (metadata, postContentType) {
       if (get(audio, 'channels') > MAX_AUDIO_CHANNELS) validationObj.add_error('Audio must have either 1 or 2 channels.');
     }
     if (nb_frames / duration > 60 || nb_frames / duration < 23) validationObj.add_error('Video framerate must be between 23 and 60.');
-    if (postContentType !== 'reel' && (aspectRatio < 4 / 5 || aspectRatio > 16 / 9)) validationObj.add_error('Video must have an aspect ratio between 4:5 and 16:9.');
     if (width > 1920) validationObj.add_warning('Video width should be less than 1920 pixels.');
-    if (duration < 3) validationObj.add_error('Video must be a minimum duration of 3 seconds.');
-    if (postContentType !== 'reel' && duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds.');
 
     if (postContentType === 'reel') {
       if (aspectRatio < 0.01 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.01:1 and 10:1.');
@@ -98,6 +94,10 @@ function validateInstagramMetadata (metadata, postContentType) {
       if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
       if (duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds for Stories content.');
       if (duration < 3) validationObj.add_error('Video duration must exceed 3 seconds for Stories content');
+    } else { // standard video post
+      if (duration < 3) validationObj.add_error('Video must be a minimum duration of 3 seconds.');
+      if (duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds.');
+      if ((aspectRatio < 4 / 5 || aspectRatio > 16 / 9)) validationObj.add_error('Video must have an aspect ratio between 4:5 and 16:9.');
     }
 
     if (size > MAX_VIDEO_SIZE) validationObj.add_error('Video file size must not exceed 100MB.');
