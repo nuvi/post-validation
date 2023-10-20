@@ -67,6 +67,9 @@ function validateInstagramMetadata (metadata, postContentType) {
   if (INSTAGRAM_IMAGE_EXTENSIONS.includes(extension)) {
     if (postContentType === 'reel') {
       validationObj.add_error('Images are not supported by reels.');
+    } else if (postContentType === 'story') {
+      if (extension === '.png') validationObj.add_error('Instagram requires JPEG.');
+      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to avoid cropping or blank space');
     } else if (aspectRatio < 0.8 || aspectRatio > 1.91) {
       validationObj.add_error('Image must have an aspect ratio between 0.8 and 1.91.');
     }
