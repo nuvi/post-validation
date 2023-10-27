@@ -52,5 +52,9 @@ module.exports = function getFacebookResolution (message) {
     return 'Typically, our process automatically resizes and formats images to avoid this error. You may duplicate the post and reschedule and the images should be handled correctly. If the issue persists please contact customer support.';
   }
 
+  if (message.includes('targeting invalid')) {
+    return 'This typically happens when targeting is applied to a post and the facebook page is not setup to handle targeting. Please review your pages settings.';
+  }
+
   return 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
 };
