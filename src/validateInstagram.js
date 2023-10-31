@@ -121,6 +121,7 @@ function validateInstagramMedia (media, postContentType) {
   if (!media || media.length === 0) all.add_error('Must include at least 1 image/video to automatically post to Instagram.');
   if (postContentType === 'reel' && media.length > 1) all.add_error('Maximum of 1 video to post as an Instagram Reel');
   if (media.length > 10) all.add_error('Maximum of 10 images/videos to automatically post to Instagram');
+  if (postContentType === 'story' && media.length > 1) all.add_error('Only a single item of media is supported for story posts. For additional media please create a new post.');
 
   const response = { all };
 
