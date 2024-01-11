@@ -90,7 +90,8 @@ function validateInstagramMetadata (metadata, postContentType) {
       if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
       if (duration > 60 * 15) validationObj.add_error('Video duration must not exceed 15 minutes for Reels content.');
       if (duration > 90) validationObj.add_warning('A video duration less than 90 seconds is recommended to reach the largest audience.');
-      if (duration < 5) validationObj.add_warning('A video duration greater than 5 seconds is recommended to reach the largest audience.');
+      if (duration < 5 && duration >= 3) validationObj.add_warning('A video duration greater than 5 seconds is recommended to reach the largest audience.');
+      if (duration < 3) validationObj.add_error('Video duration must be at least 3 seconds for Reels content.');
     } else if (postContentType === 'story') {
       if (aspectRatio < 0.1 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.1:1 and 10:1.');
       if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
