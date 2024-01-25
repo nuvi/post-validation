@@ -20,6 +20,9 @@ module.exports = function getInstagramResolution (message) {
   if (message.includes('Sessions for the user are not allowed because the user is not a confirmed user')) {
     return 'The Instagram User needs to log in to the Instagram mobile app and perform the required verification in order to be allowed to publish content.';
   }
+  if (message.includes('Media upload has failed with error code 2207050')) {
+    return 'The Instagram Professional account is either inactive, checkpointed, or restricted, and needs to be re-enabled through the native Instagram app.';
+  }
   if (message.includes('Error:')) {
     return 'Facebook encountered an error. Please try again.';
   }
