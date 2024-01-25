@@ -95,6 +95,12 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('instagram', input)).toEqual(expected);
   });
 
+  it('should handle IG platformId not found error', () => {
+    const input = 'StatusCodeError: 400 - {"error":{"message":"Unsupported post request. Object with ID \'17841461676507125\' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api","type":"GraphMethodException","code":100,"error_subcode":33,"fbtrace_id":"AcDZBUHMD0UzbztVrJleRjk"}}';
+    const expected = 'This Instagram account no longr exists or does not have permission to publish. Please reauthorize the Instagram account if you believe this to be an error.';
+    expect(getErrorResolution('instagram', input)).toEqual(expected);
+  });
+
   it('should handle IG unknown errors', () => {
     const input = 'Holy smokes this thing didn\'t work.';
     const expected = 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
