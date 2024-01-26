@@ -95,6 +95,12 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('instagram', input)).toEqual(expected);
   });
 
+  it('should handle disabled accounts', () => {
+    const input = 'StatusCodeError: 400 - {"error":{"message":"Error: Media upload has failed with error code 2207050.","type":"OAuthException","code":190,"error_subcode":464,"fbtrace_id":"Ag9aEZj3MREVj9m9kxav2rf"}} ';
+    const expected = 'The Instagram Professional account is either inactive, checkpointed, or restricted, and needs to be re-enabled through the native Instagram app.';
+    expect(getErrorResolution('instagram', input)).toEqual(expected);
+  });
+
   it('should handle IG unknown errors', () => {
     const input = 'Holy smokes this thing didn\'t work.';
     const expected = 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
