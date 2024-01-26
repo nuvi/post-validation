@@ -23,6 +23,9 @@ module.exports = function getInstagramResolution (message) {
   if (message.includes('does not exist, cannot be loaded due to missing permissions, or does not support this operation')) {
     return 'This Instagram account no longr exists or does not have permission to publish. Please reauthorize the Instagram account if you believe this to be an error.';
   }
+  if (message.includes('Media upload has failed with error code 2207050')) {
+    return 'The Instagram Professional account is either inactive, checkpointed, or restricted, and needs to be re-enabled through the native Instagram app.';
+  }
   if (message.includes('Error:')) {
     return 'Facebook encountered an error. Please try again.';
   }
