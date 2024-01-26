@@ -95,6 +95,12 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('instagram', input)).toEqual(expected);
   });
 
+  it('should handle IG platformId not found error', () => {
+    const input = 'StatusCodeError: 400 - {"error":{"message":"Unsupported post request. Object with ID \'17841461676507125\' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api","type":"GraphMethodException","code":100,"error_subcode":33,"fbtrace_id":"AcDZBUHMD0UzbztVrJleRjk"}}';
+    const expected = 'This Instagram account no longr exists or does not have permission to publish. Please reauthorize the Instagram account if you believe this to be an error.';
+    expect(getErrorResolution('instagram', input)).toEqual(expected);
+  });
+
   it('should handle disabled accounts', () => {
     const input = 'StatusCodeError: 400 - {"error":{"message":"Error: Media upload has failed with error code 2207050.","type":"OAuthException","code":190,"error_subcode":464,"fbtrace_id":"Ag9aEZj3MREVj9m9kxav2rf"}} ';
     const expected = 'The Instagram Professional account is either inactive, checkpointed, or restricted, and needs to be re-enabled through the native Instagram app.';
