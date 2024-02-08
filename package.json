@@ -1,5 +1,5 @@
 {
-  "name": "post-validation",
+  "name": "@reputationnation/post-validation",
   "version": "1.0.0",
   "description": "a repository of validation rules for use across multiple Reputation.com services",
   "main": "index.js",
