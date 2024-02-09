@@ -2,6 +2,10 @@
   "name": "@reputationnation/post-validation",
   "version": "1.0.0",
   "description": "a repository of validation rules for use across multiple Reputation.com services",
+  "engines": {
+    "node": "18.X",
+    "npm": "9.X"
+  },
   "main": "index.js",
   "scripts": {
     "lint": "npx eslint ./",
@@ -16,7 +20,6 @@
   },
   "author": "Reputation.com",
   "license": "UNLICENSED",
-  "private": true,
   "dependencies": {
     "ajv": "^6.12.6",
     "twitter-text": "^3.0.1"
