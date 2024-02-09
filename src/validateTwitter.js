@@ -22,7 +22,6 @@ function validateTwitterBody (body, replies = [], postContentType, hasMedia = fa
   if (parsedTweet.permillage > 1000) validationObj.add_error('Message too long in primary Tweet', 1001, body.length);
   else if (!parsedTweet.valid && !hasMedia) validationObj.add_error('Invalid post body in primary Tweet');
 
-
   if (replies.length > 10) validationObj.add_warning('Having more than 10 replies Twitter may flag the account as spam');
 
   replies.forEach((reply, index) => {

@@ -8,7 +8,6 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('truth.social', input)).toEqual(expected);
   });
 
-
   /* Facebook */
   it('should handle Facebook security check errors', () => {
     const input = 'StatusCodeError: 400 - {"error":{"message":"A security check is required to proceed.","type":"OAuthException","code":368,"error_data":{"sentry_block_data":"Aei7dLt4UvLkyCYEx1ZtWF_T2COu9aHfHorH2BqrF30xFDN6ZbQMB12bs28Vc1-b1bqQOrRHmOVYzSfe5aoIQK0L0eXMo4ZWOcEAc36sbC-ZGQlQba-WCC4upv8xkMuxNZ0dsXS77bLLYXSi8HPQbPLiN0uL7oel8Ryq9r_WL5jJNwhPMlbmnEnm7lXJeYMj5lHtkY2UddSJYlFm-roLF3bSZDYIiPXqrY6U00boaZ_d1LI3YRFzAaCZMnay41BG23VhTCKY4SXXZRkYcH880EQWKnSFBy8s5pWUkyCgfMD3bntXqYTTxoDgP0DkFlw9_UjJa7WS9-ACc9ghfVsAILwbnlMZ0LzswXqZSf1_Hl4REmyVg1ox0y1eBO33ZL4FFwAIV0YAyybJiAH-fQqa7y5R-wEOyepAk4iVi0dmAh0q3utOg7n6I8IS-Db7y8QnFXw","help_center_id":0,"is_silent":false},"error_subcode":1404006,"error_user_msg":"","fbtrace_id":"AeJWYBGJKg6Yu8fXI8A7Wdk"}}';
@@ -54,7 +53,6 @@ describe('getErrorResolution', () => {
     const expected = 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
     expect(getErrorResolution('facebook', input)).toEqual(expected);
   });
-
 
   /* Instagram */
   it('should handle IG application does not have permission errors', () => {
@@ -113,7 +111,6 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('instagram', input)).toEqual(expected);
   });
 
-
   /* LinkedIn */
   it('should handle LinkedIn token expired errors', () => {
     const input = `Error: Error posting to https://api.linkedin.com/rest/images (initializeUpload) : 
@@ -134,14 +131,12 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('linkedin', input)).toEqual(expected);
   });
 
-
   /* TikTok */
   it('should handle unknown TikTok errors', () => {
     const input = 'Something went horribly wrong again.';
     const expected = 'An unknown error occurred. Try to publish your video again later. If the problem persists, please contact customer support.';
     expect(getErrorResolution('tiktok', input)).toEqual(expected);
   });
-
 
   /* Twitter */
   it('should handle Twitter account suspended errors', () => {
@@ -168,7 +163,6 @@ describe('getErrorResolution', () => {
     const expected = 'An unknown error occurred. Try to publish your tweet again later. If the problem persists, please contact customer support.';
     expect(getErrorResolution('twitter', input)).toEqual(expected);
   });
-
 
   /* YouTube */
   it('should handle unknown YouTube errors', () => {
