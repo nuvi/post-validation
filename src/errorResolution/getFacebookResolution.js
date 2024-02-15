@@ -56,5 +56,9 @@ module.exports = function getFacebookResolution (message) {
     return 'This typically happens when targeting is applied to a post and the facebook page is not setup to handle targeting. Please review your pages settings.';
   }
 
+  if (message.includes('No Permission to Upload Video')) {
+    return 'Facebook has determined that your access token does not have permission to upload videos. This can sometimes be caused by a mistake on Facebook\'s part. Try to publish your video again. If the error persists, you will need to re-authenticate with Facebook and ensure you do not disable any of the permissions when prompted.';
+  }
+
   return 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
 };
