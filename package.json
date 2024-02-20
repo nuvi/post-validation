@@ -1,10 +1,10 @@
 {
   "name": "@reputationnation/post-validation",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a repository of validation rules for use across multiple Reputation.com services",
   "engines": {
     "node": "18.X",
-    "npm": "10.X"
+    "npm": "9.X"
   },
   "main": "index.js",
   "scripts": {
