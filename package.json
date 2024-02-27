@@ -1,7 +1,11 @@
 {
-  "name": "post-validation",
-  "version": "1.0.0",
+  "name": "@reputationnation/post-validation",
+  "version": "1.0.4",
   "description": "a repository of validation rules for use across multiple Reputation.com services",
+  "engines": {
+    "node": ">=18.X",
+    "npm": ">=9.X"
+  },
   "main": "index.js",
   "scripts": {
     "lint": "npx eslint ./",
@@ -16,17 +20,16 @@
   },
   "author": "Reputation.com",
   "license": "UNLICENSED",
-  "private": true,
   "dependencies": {
     "ajv": "^6.12.6",
     "twitter-text": "^3.0.1"
   },
   "devDependencies": {
-    "eslint": "^5.10.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-lodash": "^7.2.0",
-    "eslint-plugin-promise": "^5.1.0",
+    "eslint": "^8.52.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-lodash": "^7.4.0",
+    "eslint-plugin-promise": "^6.1.1",
     "jest": "^26.6.3",
     "unimported": "^1.7.0"
   }

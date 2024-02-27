@@ -8,7 +8,6 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('truth.social', input)).toEqual(expected);
   });
 
-
   /* Facebook */
   it('should handle Facebook security check errors', () => {
     const input = 'StatusCodeError: 400 - {"error":{"message":"A security check is required to proceed.","type":"OAuthException","code":368,"error_data":{"sentry_block_data":"Aei7dLt4UvLkyCYEx1ZtWF_T2COu9aHfHorH2BqrF30xFDN6ZbQMB12bs28Vc1-b1bqQOrRHmOVYzSfe5aoIQK0L0eXMo4ZWOcEAc36sbC-ZGQlQba-WCC4upv8xkMuxNZ0dsXS77bLLYXSi8HPQbPLiN0uL7oel8Ryq9r_WL5jJNwhPMlbmnEnm7lXJeYMj5lHtkY2UddSJYlFm-roLF3bSZDYIiPXqrY6U00boaZ_d1LI3YRFzAaCZMnay41BG23VhTCKY4SXXZRkYcH880EQWKnSFBy8s5pWUkyCgfMD3bntXqYTTxoDgP0DkFlw9_UjJa7WS9-ACc9ghfVsAILwbnlMZ0LzswXqZSf1_Hl4REmyVg1ox0y1eBO33ZL4FFwAIV0YAyybJiAH-fQqa7y5R-wEOyepAk4iVi0dmAh0q3utOg7n6I8IS-Db7y8QnFXw","help_center_id":0,"is_silent":false},"error_subcode":1404006,"error_user_msg":"","fbtrace_id":"AeJWYBGJKg6Yu8fXI8A7Wdk"}}';
@@ -55,7 +54,6 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('facebook', input)).toEqual(expected);
   });
 
-
   /* Instagram */
   it('should handle IG application does not have permission errors', () => {
     const input = 'StatusCodeError: 400 - {"error":{"message":"(#10) Application does not have permission for this action","type":"OAuthException","code":10,"fbtrace_id":"AlxUisvCSIMDcrLtpCjx_X0"}} ';
@@ -95,12 +93,23 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('instagram', input)).toEqual(expected);
   });
 
+  it('should handle IG platformId not found error', () => {
+    const input = 'StatusCodeError: 400 - {"error":{"message":"Unsupported post request. Object with ID \'17841461676507125\' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api","type":"GraphMethodException","code":100,"error_subcode":33,"fbtrace_id":"AcDZBUHMD0UzbztVrJleRjk"}}';
+    const expected = 'This Instagram account no longr exists or does not have permission to publish. Please reauthorize the Instagram account if you believe this to be an error.';
+    expect(getErrorResolution('instagram', input)).toEqual(expected);
+  });
+
+  it('should handle disabled accounts', () => {
+    const input = 'StatusCodeError: 400 - {"error":{"message":"Error: Media upload has failed with error code 2207050.","type":"OAuthException","code":190,"error_subcode":464,"fbtrace_id":"Ag9aEZj3MREVj9m9kxav2rf"}} ';
+    const expected = 'The Instagram Professional account is either inactive, checkpointed, or restricted, and needs to be re-enabled through the native Instagram app.';
+    expect(getErrorResolution('instagram', input)).toEqual(expected);
+  });
+
   it('should handle IG unknown errors', () => {
     const input = 'Holy smokes this thing didn\'t work.';
     const expected = 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
     expect(getErrorResolution('instagram', input)).toEqual(expected);
   });
-
 
   /* LinkedIn */
   it('should handle LinkedIn token expired errors', () => {
@@ -122,14 +131,12 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('linkedin', input)).toEqual(expected);
   });
 
-
   /* TikTok */
   it('should handle unknown TikTok errors', () => {
     const input = 'Something went horribly wrong again.';
     const expected = 'An unknown error occurred. Try to publish your video again later. If the problem persists, please contact customer support.';
     expect(getErrorResolution('tiktok', input)).toEqual(expected);
   });
-
 
   /* Twitter */
   it('should handle Twitter account suspended errors', () => {
@@ -156,7 +163,6 @@ describe('getErrorResolution', () => {
     const expected = 'An unknown error occurred. Try to publish your tweet again later. If the problem persists, please contact customer support.';
     expect(getErrorResolution('twitter', input)).toEqual(expected);
   });
-
 
   /* YouTube */
   it('should handle unknown YouTube errors', () => {

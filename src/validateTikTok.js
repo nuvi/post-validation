@@ -9,7 +9,7 @@ const TIKTOK_VIDEO_CODECS = ['h264', 'h265', 'vp8', 'vp9'];
 
 // https://developers.tiktok.com/doc/web-video-kit-with-web
 function validateTikTokBody (body) {
-  const maxCharacters = 150;
+  const maxCharacters = 2200;
   const validationObj = new ValidationObj();
 
   if (body.length > maxCharacters) {
