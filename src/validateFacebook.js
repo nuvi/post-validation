@@ -101,8 +101,8 @@ function validateFacebookMetadata (metadata, postContentType) {
     const frameRate = nb_frames / duration;
 
     if (postContentType === 'reel') {
-      if (duration < 4) validationObj.add_error('Reel duration must be at least 4 seconds.');
-      if (duration > 60) validationObj.add_error('Reel duration must be less than or equal to 1 minute.');
+      if (duration < 3) validationObj.add_error('Video duration must be at least 3 seconds for Reels content.');
+      if (duration > 60) validationObj.add_error('Video duration must be less than or equal to 1 minute for Reels content.');
       if (frameRate < 23) validationObj.add_error('Frame rate must be at least 23fps.');
       if (aspectRatio !== lowerAspectRatio) validationObj.add_error('Reel aspect ratio must be 9:16.');
       if (effectiveWidth < 540) validationObj.add_error('Video width must be at least 540 pixels');
