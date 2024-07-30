@@ -1,6 +1,7 @@
 module.exports = {
   ASSISTANT: 'assistant',
   FACEBOOK: 'facebook',
+  THREADS: 'threads',
   TWITTER: 'twitter',
   LINKEDIN: 'linkedin',
   YOUTUBE: 'youtube',
