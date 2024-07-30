@@ -35,17 +35,17 @@ const MIN_VIDEO_DURATION = 1;
 const MAX_VIDEO_DURATION = 300; // 5 Minutes
 const MAX_VIDEO_SIZE = 1000000000; // 1GB
 
-const HASHTAG_REGEX = /#[\w]+/ig;
+const HASHTAG_REGEX = /#[\w]+/gi;
 
 function validateThreadsBody (body, replies = []) {
   const validationObj = new ValidationObj();
   if (body.length > MAX_CHARACTERS) validationObj.add_error(`Threads must not contain more than ${MAX_CHARACTERS} characters`);
-  if (body.match(HASHTAG_REGEX).length > 1) validationObj.add_warning('Threads will only use the first tag. All other tags will be displayed as text.');
+  if (get(body.match(HASHTAG_REGEX), 'length', 0) > 1) validationObj.add_warning('Threads will only use the first tag. All other tags will be displayed as text.');
   replies.forEach((reply, index) => {
     if (reply.body.length) {
       const replyNumber = `reply #${index + 1}`;
       if (reply.body.length > MAX_CHARACTERS) validationObj.add_error(`Threads must not contain more than ${MAX_CHARACTERS} characters in ${replyNumber}`);
-      if (reply.body.match(HASHTAG_REGEX).length > 1) validationObj.add_warning(`Threads ${replyNumber} will only use the first tag. All other tags will be displayed as text.`);
+      if (get(reply.body.match(HASHTAG_REGEX), 'length', 0) > 1) validationObj.add_warning(`Threads ${replyNumber} will only use the first tag. All other tags will be displayed as text.`);
     }
   });
 
