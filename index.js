@@ -59,6 +59,11 @@ const {
   threadRegex,
 } = require('./src/regex');
 const ValidationObj = require('./src/ValidationObj');
+const {
+  THREADS_VIDEO_EXTENSIONS,
+  THREADS_IMAGE_EXTENSIONS,
+  validate_threads,
+} = require('./src/validateThreads');
 
 module.exports = {
   validate_post,
@@ -90,6 +95,9 @@ module.exports = {
   validate_tiktok,
   validateTikTokMetadata,
   TIKTOK_VIDEO_EXTENSIONS,
+  THREADS_IMAGE_EXTENSIONS,
+  THREADS_VIDEO_EXTENSIONS,
+  validate_threads,
   validateTwitterBody,
   validateTwitterMetadata,
   validateTwitterImageDimensions,

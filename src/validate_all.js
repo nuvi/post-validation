@@ -1,5 +1,5 @@
 const {
-  ASSISTANT, FACEBOOK, TWITTER, LINKEDIN, PINTEREST, YOUTUBE, INSTAGRAM, GOOGLE_MY_BUSINESS, TIKTOK,
+  ASSISTANT, FACEBOOK, TWITTER, THREADS, LINKEDIN, PINTEREST, YOUTUBE, INSTAGRAM, GOOGLE_MY_BUSINESS, TIKTOK,
 } = require('./enums');
 
 const { validate_facebook } = require('./validateFacebook');
@@ -11,6 +11,7 @@ const { validate_instagram } = require('./validateInstagram');
 const { validate_google_my_business } = require('./validateGoogleMyBusiness');
 const validate_assistant = require('./validateAssistant');
 const { validate_tiktok } = require('./validateTikTok');
+const { validate_threads } = require('./validateThreads');
 
 module.exports = function validate_all (post, integration, tikTokCreatorLimits) {
   if (integration.platform === FACEBOOK) return validate_facebook(post, integration);
@@ -22,6 +23,7 @@ module.exports = function validate_all (post, integration, tikTokCreatorLimits) 
   if (integration.platform === GOOGLE_MY_BUSINESS) return validate_google_my_business(post, integration);
   if (integration.platform === ASSISTANT) return validate_assistant(post, integration);
   if (integration.platform === TIKTOK) return validate_tiktok(post, integration, tikTokCreatorLimits);
+  if (integration.platform === THREADS) return validate_threads(post, integration);
 
   throw new Error('No implemented integration selected!');
 };
