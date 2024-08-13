@@ -124,7 +124,7 @@ function validateGMBMedia (media) {
         all.add_error('Video must have a duration of 30 seconds or less.');
       }
       // Convert bits to megabytes
-      if (media[0].metadata.size / 800000 > 75) {
+      if (media[0].metadata.size / 8000000 > 75) {
         all.add_error('Video must be 75 MB or less.');
       }
       if (Math.min(stream.width, stream.height) < 720) {
