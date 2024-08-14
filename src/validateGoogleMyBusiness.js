@@ -26,6 +26,12 @@ const GMB_IMAGE_EXTENSIONS = [
   '.png',
 ];
 
+const GMB_VIDEO_EXTENSIONS = [
+  '.mp4',
+  '.mov',
+  '.avi',
+];
+
 function validateGMBBody (body, postContentType) {
   const maxCharacters = 1500;
   const validationObj = new ValidationObj();
@@ -112,8 +118,20 @@ function validateGMBMedia (media) {
       return response;
     }
 
-    if (!GMB_IMAGE_EXTENSIONS.includes(media[0].metadata.extension)) {
-      all.add_error(`Unsupported file type. Must be one of ${GMB_IMAGE_EXTENSIONS.join(', ')}`);
+    if (GMB_VIDEO_EXTENSIONS.includes(media[0].metadata.extension)) {
+      const stream = media[0].metadata.streams.find(s => s.codec_type === 'video');
+      if (media[0].metadata.duration > 30) {
+        all.add_error('Video must have a duration of 30 seconds or less.');
+      }
+      // Convert bits to megabytes
+      if (media[0].metadata.size / 8000000 > 75) {
+        all.add_error('Video must be 75 MB or less.');
+      }
+      if (Math.min(stream.width, stream.height) < 720) {
+        all.add_error('Video must have a resolution of at least 720p.');
+      }
+    } else if (!GMB_IMAGE_EXTENSIONS.includes(media[0].metadata.extension)) {
+      all.add_error(`Unsupported file type. Must be one of ${GMB_IMAGE_EXTENSIONS.concat(GMB_VIDEO_EXTENSIONS).join(', ')}`);
     }
   }
 
@@ -134,5 +152,6 @@ module.exports = {
   GMB_CALLS_TO_ACTION,
   GMB_CALLS_TO_ACTION_REQUIRING_URL,
   GMB_IMAGE_EXTENSIONS,
+  GMB_VIDEO_EXTENSIONS,
   validate_google_my_business,
 };
