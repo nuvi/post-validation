@@ -12,6 +12,9 @@ function validateYoutubeTitle (title) {
 
   if (!title || typeof title !== 'string' || title.length === 0) validationObj.add_error('Must have a title');
   else if (title.length > MAX_TITLE_LENGTH) validationObj.add_error('Title too long', 0, title.length);
+  if (title.match(/[<>]/g)) {
+    validationObj.add_error("Title may not include the characters '<' or '>'.");
+  }
 
   return validationObj;
 }
@@ -23,6 +26,10 @@ function validateYoutubeBody (body, postContentType) {
   if (body.length > MAX_DESCRIPTION_LENGTH) validationObj.add_error('Description too long', 0, body.length);
 
   if (!postContentType === 'reel') validationObj.add_warning('YouTube Shorts is not supported. This post will be published as a normal video.');
+
+  if (body.match(/[<>]/g)) {
+    validationObj.add_error("Body may not include the characters '<' or '>'.");
+  }
 
   return validationObj;
 }
