@@ -8,9 +8,20 @@ const getTikTokResolution = require('./errorResolution/getTikTokResolution');
 
 const GENERIC_RESOLUTION = 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
 
+const EXPIRED_INTEGRATION = 'The token used to publish this post is expired.';
+const CAN_NOT_PUBLISH = "This token for this post has been marked as one that can't be published to.";
+
 module.exports = function getErrorResolution (platform, message) {
   if (!message) {
     return GENERIC_RESOLUTION;
+  }
+
+  if (message === EXPIRED_INTEGRATION) {
+    return 'Please reauthorize the social account in order to continue publishing to this social account.';
+  }
+
+  if (message === CAN_NOT_PUBLISH) {
+    return 'The social account has been marked as an account that can not be published to. Please speak to the individual that authorized the account and have them update the credential to allow publishing.'; // eslint-disable-line max-len
   }
 
   switch (platform) {
