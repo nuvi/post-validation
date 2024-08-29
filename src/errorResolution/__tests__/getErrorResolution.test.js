@@ -8,6 +8,18 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('truth.social', input)).toEqual(expected);
   });
 
+  it('should handle generic expired integration', () => {
+    const input = 'The token used to publish this post is expired.';
+    const expected = 'Please reauthorize the social account in order to continue publishing to this social account.';
+    expect(getErrorResolution('facebook', input)).toEqual(expected);
+  });
+
+  it('should handle generic expired integration', () => {
+    const input = "This token for this post has been marked as one that can't be published to.";
+    const expected = 'The social account has been marked as an account that can not be published to. Please speak to the individual that authorized the account and have them update the credential to allow publishing.';
+    expect(getErrorResolution('facebook', input)).toEqual(expected);
+  });
+
   /* Facebook */
   it('should handle Facebook security check errors', () => {
     const input = 'StatusCodeError: 400 - {"error":{"message":"A security check is required to proceed.","type":"OAuthException","code":368,"error_data":{"sentry_block_data":"Aei7dLt4UvLkyCYEx1ZtWF_T2COu9aHfHorH2BqrF30xFDN6ZbQMB12bs28Vc1-b1bqQOrRHmOVYzSfe5aoIQK0L0eXMo4ZWOcEAc36sbC-ZGQlQba-WCC4upv8xkMuxNZ0dsXS77bLLYXSi8HPQbPLiN0uL7oel8Ryq9r_WL5jJNwhPMlbmnEnm7lXJeYMj5lHtkY2UddSJYlFm-roLF3bSZDYIiPXqrY6U00boaZ_d1LI3YRFzAaCZMnay41BG23VhTCKY4SXXZRkYcH880EQWKnSFBy8s5pWUkyCgfMD3bntXqYTTxoDgP0DkFlw9_UjJa7WS9-ACc9ghfVsAILwbnlMZ0LzswXqZSf1_Hl4REmyVg1ox0y1eBO33ZL4FFwAIV0YAyybJiAH-fQqa7y5R-wEOyepAk4iVi0dmAh0q3utOg7n6I8IS-Db7y8QnFXw","help_center_id":0,"is_silent":false},"error_subcode":1404006,"error_user_msg":"","fbtrace_id":"AeJWYBGJKg6Yu8fXI8A7Wdk"}}';
@@ -95,7 +107,7 @@ describe('getErrorResolution', () => {
 
   it('should handle IG platformId not found error', () => {
     const input = 'StatusCodeError: 400 - {"error":{"message":"Unsupported post request. Object with ID \'17841461676507125\' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api","type":"GraphMethodException","code":100,"error_subcode":33,"fbtrace_id":"AcDZBUHMD0UzbztVrJleRjk"}}';
-    const expected = 'This Instagram account no longr exists or does not have permission to publish. Please reauthorize the Instagram account if you believe this to be an error.';
+    const expected = 'This Instagram account no longer exists or does not have permission to publish. Please reauthorize the Instagram account if you believe this to be an error.';
     expect(getErrorResolution('instagram', input)).toEqual(expected);
   });
 

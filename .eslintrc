@@ -17,7 +17,6 @@
       "exports": "always-multiline",
       "functions": "ignore"
     }],
-    "default-param-last": [1],
     "guard-for-in": 0,
     "lodash/import-scope": [2, "method"],
     "lodash/chaining": [2, "never", 2], // please do not use _.chain, it's so bad. It imports the entirety of lodash.
