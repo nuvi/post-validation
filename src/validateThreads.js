@@ -37,8 +37,9 @@ const MAX_VIDEO_SIZE = 1000000000; // 1GB
 
 const HASHTAG_REGEX = /#[\w]+/gi;
 
-function validateThreadsBody (body, replies = []) {
+function validateThreadsBody (body, hasMedia, replies = []) {
   const validationObj = new ValidationObj();
+  if (!body.length && !hasMedia) validationObj.add_error('Threads must contain either media or text.');
   if (body.length > MAX_CHARACTERS) validationObj.add_error(`Threads must not contain more than ${MAX_CHARACTERS} characters`);
   if (get(body.match(HASHTAG_REGEX), 'length', 0) > 1) validationObj.add_warning('Threads will only use the first tag. All other tags will be displayed as text.');
   replies.forEach((reply, index) => {
@@ -107,10 +108,11 @@ function validateThreadsMedia (media) {
 }
 
 function validate_threads (post, integration) {
+  const hasMedia = !!post.media.length;
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateThreadsBody(post.body, post.replies),
+    body: validateThreadsBody(post.body, hasMedia, post.replies),
     media: validateThreadsMedia(post.media),
   };
 }

@@ -1,6 +1,6 @@
 {
   "name": "@reputationnation/post-validation",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "a repository of validation rules for use across multiple Reputation.com services",
   "engines": {
     "node": ">=18.X",
