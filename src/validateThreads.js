@@ -112,7 +112,7 @@ function validate_threads (post, integration) {
   return {
     integration: integration.id,
     platform: integration.platform,
-    body: validateThreadsBody(post.body, post.replies, hasMedia),
+    body: validateThreadsBody(post.body, hasMedia, post.replies),
     media: validateThreadsMedia(post.media),
   };
 }
