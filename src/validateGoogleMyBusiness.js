@@ -112,6 +112,7 @@ function validateGMBMedia (media) {
     for (const mediaItem of media) {
       if (!GMB_IMAGE_EXTENSIONS.includes(mediaItem.metadata.extension)) {
         all.add_error(`Unsupported file type. Must be one of ${GMB_IMAGE_EXTENSIONS.join(', ')}`);
+        break;
       }
     }
   }
