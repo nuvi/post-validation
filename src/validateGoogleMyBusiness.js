@@ -103,10 +103,7 @@ function validateGMBMedia (media) {
   const all = new ValidationObj();
 
   const response = { all };
-
-  if (!media || media.length !== 1) {
-    all.add_error('Must include exactly 1 image to post to Google Business Profile');
-  } else {
+  if (media.length) {
     if (media.some(instance => !isObject(instance.metadata))) {
       all.add_error('Media metadata analysis unavailable. Please check back later.');
       return response;
@@ -116,7 +113,6 @@ function validateGMBMedia (media) {
       all.add_error(`Unsupported file type. Must be one of ${GMB_IMAGE_EXTENSIONS.join(', ')}`);
     }
   }
-
   return response;
 }
 
