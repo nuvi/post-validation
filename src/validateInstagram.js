@@ -24,7 +24,8 @@ const INSTAGRAM_AUDIO_CODECS = [
   'aac'
 ];
 
-const MAX_VIDEO_SIZE = 100000000;
+const MAX_VIDEO_SIZE = 100000000; // 100MB
+const MAX_REEL_SIZE = 1000000000; // 1GB
 
 const MAX_AUDIO_SAMPLE_RATE = 48000;
 const MAX_AUDIO_CHANNELS = 2;
@@ -54,13 +55,14 @@ function validateInstagramBody (body, replies = []) {
 }
 
 // https://developers.facebook.com/docs/instagram-api/reference/ig-user/media
+// https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media
 function validateInstagramMetadata (metadata, postContentType) {
   const validationObj = new ValidationObj();
 
   const { extension, size, duration } = metadata;
   const streamsObj = crossStreams(metadata);
   const {
-    width, height, nb_frames, codec_name,
+    width, height, nb_frames, codec_name, field_order,
   } = streamsObj.video || {};
   const audio = streamsObj.audio || {};
   let aspectRatio = width / height;
@@ -77,6 +79,7 @@ function validateInstagramMetadata (metadata, postContentType) {
     const rotation = get(streamsObj, 'video.rotation');
     if (rotation && (`${rotation}` === '-90' || `${rotation}` === '90')) aspectRatio = height / width;
     if (!INSTAGRAM_VIDEO_CODECS.includes(codec_name)) validationObj.add_error('Video codec must be either H.264 or HEVC.');
+    if (field_order !== 'progressive') validationObj.add_error('Video must use progressive scan.');
     if (!isEmpty(audio)) {
       if (!INSTAGRAM_AUDIO_CODECS.includes(get(audio, 'codec_name'))) validationObj.add_error('Audio codec must be AAC.');
       if (get(audio, 'sample_rate') > MAX_AUDIO_SAMPLE_RATE) validationObj.add_error('Audio sample rate must be less than or equal to 48khz.');
@@ -85,31 +88,31 @@ function validateInstagramMetadata (metadata, postContentType) {
     if (nb_frames / duration > 60 || nb_frames / duration < 23) validationObj.add_error('Video framerate must be between 23 and 60.');
     if (width > 1920) validationObj.add_warning('Video width should be less than 1920 pixels.');
 
-    if (postContentType === 'reel') {
+    if (postContentType === 'story') {
       if (aspectRatio < 0.01 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.01:1 and 10:1.');
-      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
-      if (duration > 60 * 15) validationObj.add_error('Video duration must not exceed 15 minutes for Reels content.');
-      if (duration > 90) validationObj.add_warning('A video duration less than 90 seconds is recommended to reach the largest audience.');
-      if (duration < 5 && duration >= 3) validationObj.add_warning('A video duration greater than 5 seconds is recommended to reach the largest audience.');
-      if (duration < 3) validationObj.add_error('Video duration must be at least 3 seconds for Reels content.');
-    } else if (postContentType === 'story') {
-      if (aspectRatio < 0.1 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.1:1 and 10:1.');
-      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to reach the largest audience.');
+      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to avoid cropping or blank space.');
       if (duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds for Stories content.');
       if (duration < 3) validationObj.add_error('Video duration must exceed 3 seconds for Stories content');
-    } else { // standard video post
+      if (size > MAX_VIDEO_SIZE) validationObj.add_error('Video file size must not exceed 100MB.');
+    } else { // standard video post AND reel posts
+      // from meta's docs: "Beginning July 1, 2023, all single feed videos published through the Instagram Content Publishing API will be shared as reels."
+      // source: https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/content-publishing#
+      if (aspectRatio < 0.01 / 1 || aspectRatio > 10 / 1) validationObj.add_error('Video must have an aspect ratio between 0.01:1 and 10:1.');
+      if (aspectRatio !== 9 / 16) validationObj.add_warning('An aspect ratio of 9:16 is recommended to avoid cropping or blank space.');
+      if (duration > 60 * 15) validationObj.add_error('Video duration must not exceed 15 minutes.');
       if (duration < 3) validationObj.add_error('Video must be a minimum duration of 3 seconds.');
-      if (duration > 60) validationObj.add_error('Video duration must not exceed 60 seconds.');
-      if ((aspectRatio < 4 / 5 || aspectRatio > 16 / 9)) validationObj.add_error('Video must have an aspect ratio between 4:5 and 16:9.');
+      if (size > MAX_REEL_SIZE) validationObj.add_error('Video file size must not exceed 1GB.');
     }
-
-    if (size > MAX_VIDEO_SIZE) validationObj.add_error('Video file size must not exceed 100MB.');
   } else {
     validationObj.add_error(`Unsupported file type. Must be one of: ${INSTAGRAM_IMAGE_EXTENSIONS.join(', ')}, ${INSTAGRAM_VIDEO_EXTENSIONS.join(', ')}`);
   }
 
   if (width < 320) {
     validationObj.add_error('Image width must be at least 320px');
+  }
+
+  if (width > 1440) {
+    validationObj.add_warning('Image width should not be greater than 1440px. Instagram will scale the image down upon publish.');
   }
 
   return validationObj;

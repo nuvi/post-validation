@@ -80,6 +80,7 @@ function validateFacebookMetadata (metadata, postContentType) {
   const streamsObj = crossStreams(metadata);
 
   if (FACEBOOK_IMAGE_EXTENSIONS.includes(extension)) {
+    // https://developers.facebook.com/docs/graph-api/reference/page/photos/
     if (extension === '.gif') validationObj.add_warning('GIFs can be uploaded but will not animate on facebook.');
     if (size >= FACEBOOK_MAX_IMAGE_SIZE) {
       validationObj.add_warning("Images larger than 4 MB will be resized to meet Facebook's image size requirements.");
@@ -101,9 +102,11 @@ function validateFacebookMetadata (metadata, postContentType) {
     const frameRate = nb_frames / duration;
 
     if (postContentType === 'reel') {
+      // https://developers.facebook.com/docs/video-api/guides/reels-publishing
       if (duration < 3) validationObj.add_error('Video duration must be at least 3 seconds for Reels content.');
-      if (duration > 60) validationObj.add_error('Video duration must be less than or equal to 1 minute for Reels content.');
-      if (frameRate < 23) validationObj.add_error('Frame rate must be at least 23fps.');
+      if (duration > 90) validationObj.add_error('Video duration cannot exceed 90 seconds for Reels content.');
+      if (frameRate < 24) validationObj.add_error('Frame rate must be at least 24fps.');
+      if (frameRate > 60) validationObj.add_error('Frame rate must not exceed 60fps.');
       if (aspectRatio !== lowerAspectRatio) validationObj.add_error('Reel aspect ratio must be 9:16.');
       if (effectiveWidth < 540) validationObj.add_error('Video width must be at least 540 pixels');
       if (effectiveHeight < 960) validationObj.add_error('Video height must be at least 960 pixels');
