@@ -66,6 +66,12 @@ describe('getErrorResolution', () => {
     expect(getErrorResolution('facebook', input)).toEqual(expected);
   });
 
+  it('should handle FB reduce data amount error', () => {
+    const input = 'StatusCodeError: 500 - {"error":{"code":1,"message":"Please reduce the amount of data you\'re asking for, then retry your request"}}';
+    const expected = 'Facebook is throwing this error, please wait for sometime and then retry.';
+    expect(getErrorResolution('facebook', input)).toEqual(expected);
+  });
+
   /* Instagram */
   it('should handle IG application does not have permission errors', () => {
     const input = 'StatusCodeError: 400 - {"error":{"message":"(#10) Application does not have permission for this action","type":"OAuthException","code":10,"fbtrace_id":"AlxUisvCSIMDcrLtpCjx_X0"}} ';
