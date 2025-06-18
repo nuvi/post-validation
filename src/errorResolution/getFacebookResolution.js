@@ -60,5 +60,9 @@ module.exports = function getFacebookResolution (message) {
     return 'Facebook has determined that your access token does not have permission to upload videos. This can sometimes be caused by a mistake on Facebook\'s part. Try to publish your video again. If the error persists, you will need to re-authenticate with Facebook and ensure you do not disable any of the permissions when prompted.';
   }
 
+  if (message.includes('Please reduce the amount of data you\'re asking for, then retry your request')) {
+    return 'Facebook is throwing this error, please wait for sometime and then retry.';
+  }
+
   return 'An unknown error occurred. Try to publish your post again later. If the problem persists, please contact customer support.';
 };
